@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>keenwiix food — рацион на неделю</title>
+<meta name="description" content="Ответьте на несколько вопросов и получите меню на 7 дней со списком покупок под ваш магазин, бюджет и вкус. Бесплатно.">
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="keenwiix food">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+:root{
+  --bg:#fff; --fg:#0a0a0a; --mut:#707070; --line:#e4e4e4; --soft:#f6f6f6;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --dur:.24s;
+}
+:root[data-theme="dark"]{
+  --bg:#0a0a0a; --fg:#f4f4f4; --mut:#9a9a9a; --line:#262626; --soft:#161616;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 -apple-system,"Inter","Segoe UI",Roboto,system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);transition:background .3s var(--ease),color .3s var(--ease)}
+button{font:inherit;color:inherit;background:none;border:0}
+:focus-visible{outline:2px solid var(--fg);outline-offset:3px;border-radius:2px}
+.wrap{max-width:680px;margin:0 auto;padding:0 20px 96px}
+@view-transition{navigation:auto}
+::view-transition-old(root){animation:vtOut .2s var(--ease) both}
+::view-transition-new(root){animation:vtIn .28s var(--ease-out) both}
+@keyframes vtOut{to{opacity:0;transform:translateY(-4px)}}
+@keyframes vtIn{from{opacity:0;transform:translateY(6px)}}
+.top{display:flex;justify-content:space-between;align-items:center;padding:20px 0;gap:12px}
+.logo{font-weight:700;letter-spacing:-.04em;font-size:22px;cursor:pointer;padding:0}
+.logo:hover{opacity:.7;transition:opacity var(--dur) var(--ease)}
+.tag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--fg);padding:3px 8px}
+.theme-btn{
+  width:36px;height:36px;border:1px solid var(--line);background:var(--bg);cursor:pointer;
+  display:grid;place-items:center;transition:transform .2s var(--ease),border-color .2s var(--ease);
+}
+.theme-btn:hover{border-color:var(--fg);transform:rotate(-15deg)}
+.theme-btn svg{width:18px;height:18px;stroke:var(--fg);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.theme-btn .sun{display:none}
+.theme-btn .moon{display:block}
+:root[data-theme="dark"] .theme-btn .sun{display:block}
+:root[data-theme="dark"] .theme-btn .moon{display:none}
+.bar{height:2px;background:var(--line);margin-bottom:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--fg);transition:width .5s var(--ease-out);position:relative}
+.bar i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.8),transparent);animation:shimmer 1.6s infinite}
+@keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+h1{font-size:clamp(40px,11vw,68px);line-height:1;letter-spacing:-.045em;margin:56px 0 18px;font-weight:700;animation:heroIn .7s var(--ease-out) both}
+@keyframes heroIn{from{opacity:0;transform:translateY(14px) scale(.98);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+h2{font-size:clamp(28px,7vw,40px);letter-spacing:-.035em;line-height:1.08;margin:36px 0 10px;font-weight:700}
+.lead{font-size:18px;color:var(--mut);margin:0 0 32px;max-width:30em;animation:heroIn .7s var(--ease-out) .06s both}
+.sub{color:var(--mut);margin:0 0 24px}
+.kicker{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+.btn{display:inline-block;background:var(--fg);color:var(--bg);border:1px solid var(--fg);padding:15px 28px;cursor:pointer;font-weight:600;letter-spacing:-.01em;position:relative;overflow:hidden;isolation:isolate;transition:background var(--dur) var(--ease),transform .15s var(--ease),box-shadow var(--dur) var(--ease)}
+.btn:hover{background:#262626;box-shadow:0 6px 20px -8px rgba(0,0,0,.35);transform:translateY(-1px)}
+:root[data-theme="dark"] .btn:hover{background:#e8e8e8;color:#0a0a0a}
+.btn:active{transform:scale(.97) translateY(0)}
+.btn::after{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.22),transparent 60%);opacity:0;transition:opacity .3s var(--ease)}
+:root[data-theme="dark"] .btn::after{background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(0,0,0,.15),transparent 60%)}
+.btn:hover::after{opacity:1}
+.btn.ghost{background:var(--bg);color:var(--fg)}
+.btn.ghost:hover{background:var(--soft)}
+.btn.sm{padding:9px 16px;font-size:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:24px}
+.fine{font-size:13px;color:var(--mut);margin-top:16px}
+.opt{display:block;width:100%;text-align:left;padding:16px 18px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer;margin-bottom:8px;font-weight:500;transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease),color var(--dur) var(--ease),transform .18s var(--ease-out);animation:fadeUp .4s var(--ease-out) both}
+.opt:nth-child(1){animation-delay:.02s}.opt:nth-child(2){animation-delay:.06s}.opt:nth-child(3){animation-delay:.10s}.opt:nth-child(4){animation-delay:.14s}.opt:nth-child(5){animation-delay:.18s}
+.opt:hover{border-color:var(--fg);transform:translateX(2px)}
+.opt small{display:block;color:var(--mut);font-size:13px;font-weight:400}
+.opt[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg);transform:scale(1.01)}
+.opt[aria-pressed=true] small{color:var(--mut)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:9px 16px;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--fg);cursor:pointer;transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease),color var(--dur) var(--ease),transform .15s var(--ease)}
+.chip:hover{border-color:var(--fg);transform:translateY(-1px)}
+.chip[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg);animation:pop .25s var(--ease-out)}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
+.stepper{display:flex;align-items:center;gap:24px;margin:24px 0}
+.stepper button{width:56px;height:56px;border:1px solid var(--fg);background:var(--bg);color:var(--fg);font-size:26px;cursor:pointer;transition:background var(--dur) var(--ease),transform .15s var(--ease)}
+.stepper button:hover{background:var(--soft);transform:scale(1.04)}
+.stepper button:active{transform:scale(.94)}
+.stepper output{font-size:56px;font-weight:700;letter-spacing:-.04em;min-width:64px;text-align:center;font-variant-numeric:tabular-nums;animation:numIn .3s var(--ease-out)}
+@keyframes numIn{from{opacity:0;transform:translateY(8px) scale(.9)}to{opacity:1;transform:none}}
+.big{font-size:56px;font-weight:700;letter-spacing:-.04em;margin:16px 0;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--fg);margin:8px 0 4px}
+.scale{display:flex;justify-content:space-between;font-size:13px;color:var(--mut)}
+.load{padding:80px 0;text-align:center}
+.skel{height:18px;background:linear-gradient(90deg,var(--soft) 25%,var(--line) 37%,var(--soft) 63%);background-size:400% 100%;animation:sk 1.2s infinite linear;border-radius:4px;margin:12px auto}
+@keyframes sk{0%{background-position:100% 50%}100%{background-position:0 50%}}
+.sum{border:1px solid var(--fg);padding:20px;margin:20px 0;animation:cardIn .5s var(--ease-out) both}
+@keyframes cardIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+.sum .n{font-size:40px;font-weight:700;letter-spacing:-.04em;line-height:1.1;font-variant-numeric:tabular-nums}
+.sum p{margin:6px 0 0;color:var(--mut);font-size:14px}
+.src{font-size:12px;color:var(--mut);margin-top:8px}
+.note{background:var(--soft);padding:12px 16px;font-size:14px;margin:12px 0;animation:fadeUp .35s var(--ease-out) both}
+.tabs{display:flex;border-bottom:1px solid var(--fg);margin:28px 0 8px;position:relative}
+.tab{flex:1;padding:14px;border:0;border-bottom:3px solid transparent;cursor:pointer;font-weight:600;color:var(--mut);background:var(--bg);transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease)}
+.tab[aria-selected=true]{color:var(--fg);border-bottom-color:var(--fg)}
+.day{border-top:1px solid var(--fg);padding:18px 0 6px;margin-top:20px;animation:fadeUp .5s var(--ease-out) both}
+.day:nth-child(1){animation-delay:.02s}.day:nth-child(2){animation-delay:.06s}.day:nth-child(3){animation-delay:.10s}.day:nth-child(4){animation-delay:.14s}
+.day:nth-child(5){animation-delay:.18s}.day:nth-child(6){animation-delay:.22s}.day:nth-child(7){animation-delay:.26s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.dh{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.dh h3{margin:0;font-size:22px;letter-spacing:-.03em}
+.dh span{font-size:13px;color:var(--mut);text-align:right}
+.meal{border-top:1px solid var(--line);padding:12px 0}
+.ml{display:flex;justify-content:space-between;align-items:center;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.lnk{background:none;border:0;padding:4px 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;font-size:13px;color:var(--mut);text-transform:none;letter-spacing:0;transition:color var(--dur) var(--ease)}
+.lnk:hover{color:var(--fg)}
+.mn{display:block;width:100%;text-align:left;background:none;border:0;padding:4px 0;cursor:pointer;font-size:18px;font-weight:600;letter-spacing:-.02em}
+.mn small{display:block;font-size:13px;font-weight:400;color:var(--mut);letter-spacing:0;margin-top:2px}
+.mn .macros{display:inline-block;margin-top:4px;font-size:12px;color:var(--mut);font-weight:400;letter-spacing:0}
+.det{padding:10px 0 6px;font-size:15px;animation:expand .3s var(--ease-out)}
+@keyframes expand{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.det ul{margin:0 0 10px;padding-left:18px}
+.det li{margin:2px 0}
+.det p{margin:0;color:var(--fg);opacity:.85}
+.det .serv{font-size:12px;color:var(--mut);margin:6px 0 8px}
+.grp{margin-top:24px;animation:fadeUp .4s var(--ease-out) both}
+.grp h3{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin:0 0 4px;font-weight:600}
+.it{display:flex;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer;transition:background .2s var(--ease);position:relative}
+.it:hover{background:var(--soft)}
+.it input{position:absolute;opacity:0;pointer-events:none}
+.it .box{width:22px;height:22px;border:1.5px solid var(--fg);flex:none;display:grid;place-items:center;transition:background .2s var(--ease),border-color .2s var(--ease);position:relative}
+.it .box svg{width:14px;height:14px;fill:none;stroke:var(--bg);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .35s var(--ease-out)}
+.it.done .box{background:var(--fg);border-color:var(--fg)}
+.it.done .box svg{stroke-dashoffset:0}
+.it span:not(.box){flex:1;transition:color .25s var(--ease),opacity .25s var(--ease)}
+.it b{font-weight:500;white-space:nowrap;transition:color .25s var(--ease)}
+.it b small{display:block;font-weight:400;color:var(--mut);font-size:11px;letter-spacing:0;text-align:right}
+.it.done span:not(.box){color:var(--mut);text-decoration:line-through;text-decoration-thickness:1px}
+.it.done b{color:var(--mut)}
+.foot{margin-top:56px;font-size:13px;color:var(--mut);border-top:1px solid var(--line);padding-top:16px}
+.offline{position:fixed;left:0;right:0;bottom:0;background:var(--fg);color:var(--bg);font-size:13px;text-align:center;padding:10px;transform:translateY(100%);transition:transform .35s var(--ease-out);z-index:50}
+.offline[aria-hidden=false]{transform:none}
+.install{display:none}
+.install[data-show=true]{display:inline-block;animation:pop .3s var(--ease-out)}
+@media (min-width:720px){
+ .cols{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+ .cols .grp{margin-top:12px}
+}
+@media (prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+@media print{.top,.bar,.tabs,.row,.lnk,.foot,.note,.offline,.install,.theme-btn{display:none!important}.wrap{padding:0}.it{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="offline" id="offline" aria-hidden="true">Офлайн-режим — данные из кэша</div>
+<script>
+'use strict';
+
+/* ================= THEME ================= */
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  const m=document.querySelector('meta[name="theme-color"]');
+  if(m) m.setAttribute('content', t==='dark'?'#0a0a0a':'#000000');
+}
+function initTheme(){
+  const saved=localStorage.getItem('keenwiix-theme');
+  const sys=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+  applyTheme(saved||sys);
+}
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme')||'light';
+  const next=cur==='dark'?'light':'dark';
+  applyTheme(next);
+  localStorage.setItem('keenwiix-theme',next);
+}
+initTheme();
+
+/* ================= PRICES fallback ================= */
+const ING_FALLBACK = {
+  oats:{n:'Овсяные хлопья',u:'g',packSize:900,p:95,c:'Крупы и бакалея'},
+  rice:{n:'Рис',u:'g',packSize:900,p:115,c:'Крупы и бакалея'},
+  brown_rice:{n:'Рис бурый',u:'g',packSize:800,p:140,c:'Крупы и бакалея'},
+  buckwheat:{n:'Гречка',u:'g',packSize:900,p:120,c:'Крупы и бакалея'},
+  pasta:{n:'Макароны',u:'g',packSize:450,p:70,c:'Крупы и бакалея'},
+  bulgur:{n:'Булгур',u:'g',packSize:800,p:130,c:'Крупы и бакалея'},
+  couscous:{n:'Кускус',u:'g',packSize:500,p:120,c:'Крупы и бакалея'},
+  quinoa:{n:'Киноа',u:'g',packSize:400,p:260,c:'Крупы и бакалея'},
+  lentils:{n:'Чечевица',u:'g',packSize:800,p:120,c:'Крупы и бакалея'},
+  chickpeas:{n:'Нут консервированный',u:'g',packSize:400,p:85,c:'Крупы и бакалея'},
+  beans:{n:'Фасоль консервированная',u:'g',packSize:400,p:80,c:'Крупы и бакалея'},
+  corn:{n:'Кукуруза консервированная',u:'g',packSize:340,p:85,c:'Крупы и бакалея'},
+  tomatoes_c:{n:'Томаты в собственном соку',u:'g',packSize:400,p:95,c:'Крупы и бакалея'},
+  tuna:{n:'Тунец консервированный',u:'g',packSize:185,p:130,c:'Крупы и бакалея'},
+  oil:{n:'Масло растительное',u:'ml',packSize:1000,p:180,c:'Крупы и бакалея'},
+  nuts:{n:'Орехи',u:'g',packSize:200,p:260,c:'Крупы и бакалея'},
+  seeds:{n:'Семечки',u:'g',packSize:200,p:110,c:'Крупы и бакалея'},
+  raisins:{n:'Изюм',u:'g',packSize:200,p:120,c:'Крупы и бакалея'},
+  cocoa:{n:'Какао',u:'g',packSize:100,p:180,c:'Крупы и бакалея'},
+  honey:{n:'Мёд',u:'g',packSize:500,p:350,c:'Крупы и бакалея'},
+  tofu:{n:'Тофу',u:'g',packSize:400,p:350,c:'Крупы и бакалея'},
+  bread:{n:'Хлеб цельнозерновой',u:'g',packSize:400,p:60,c:'Хлеб'},
+  egg:{n:'Яйца С1',u:'pcs',packSize:10,p:120,c:'Молочные продукты и яйца'},
+  milk:{n:'Молоко 2,5%',u:'ml',packSize:1000,p:80,c:'Молочные продукты и яйца'},
+  yogurt:{n:'Йогурт натуральный',u:'g',packSize:400,p:90,c:'Молочные продукты и яйца'},
+  greek:{n:'Йогурт греческий',u:'g',packSize:300,p:140,c:'Молочные продукты и яйца'},
+  kefir:{n:'Кефир',u:'ml',packSize:900,p:80,c:'Молочные продукты и яйца'},
+  sourcream:{n:'Сметана 15%',u:'g',packSize:300,p:110,c:'Молочные продукты и яйца'},
+  cottage:{n:'Творог 5%',u:'g',packSize:300,p:150,c:'Молочные продукты и яйца'},
+  cheese:{n:'Сыр',u:'g',packSize:200,p:220,c:'Молочные продукты и яйца'},
+  chicken:{n:'Куриное филе',u:'g',packSize:700,p:320,c:'Мясо и рыба'},
+  turkey:{n:'Филе индейки',u:'g',packSize:700,p:380,c:'Мясо и рыба'},
+  pork:{n:'Свинина (карбонад)',u:'g',packSize:600,p:340,c:'Мясо и рыба'},
+  mince:{n:'Фарш говяжий',u:'g',packSize:500,p:380,c:'Мясо и рыба'},
+  hake:{n:'Филе хека',u:'g',packSize:600,p:320,c:'Мясо и рыба'},
+  salmon:{n:'Филе лосося',u:'g',packSize:500,p:890,c:'Мясо и рыба'},
+  potato:{n:'Картофель',u:'g',packSize:1000,p:40,c:'Овощи и фрукты'},
+  carrot:{n:'Морковь',u:'g',packSize:1000,p:40,c:'Овощи и фрукты'},
+  onion:{n:'Лук репчатый',u:'g',packSize:1000,p:35,c:'Овощи и фрукты'},
+  tomato:{n:'Помидоры',u:'g',packSize:1000,p:160,c:'Овощи и фрукты'},
+  cucumber:{n:'Огурцы',u:'g',packSize:1000,p:130,c:'Овощи и фрукты'},
+  cabbage:{n:'Капуста белокочанная',u:'g',packSize:1000,p:35,c:'Овощи и фрукты'},
+  pepper:{n:'Перец сладкий',u:'g',packSize:1000,p:190,c:'Овощи и фрукты'},
+  zucchini:{n:'Кабачки',u:'g',packSize:1000,p:110,c:'Овощи и фрукты'},
+  broccoli:{n:'Брокколи',u:'g',packSize:400,p:120,c:'Овощи и фрукты'},
+  garlic:{n:'Чеснок',u:'g',packSize:200,p:70,c:'Овощи и фрукты'},
+  banana:{n:'Бананы',u:'g',packSize:1000,p:110,c:'Овощи и фрукты'},
+  apple:{n:'Яблоки',u:'g',packSize:1000,p:110,c:'Овощи и фрукты'},
+  lemon:{n:'Лимон',u:'g',packSize:200,p:90,c:'Овощи и фрукты'},
+  greens:{n:'Зелень (петрушка/укроп)',u:'g',packSize:100,p:60,c:'Овощи и фрукты'}
+};
+let ING = JSON.parse(JSON.stringify(ING_FALLBACK));
+let PRICE_META = {source:'Пятёрочка', updatedAt:'2026-11-05'};
+const STORE_MULT = {disc:.9, super:1, prem:1.25};
+
+async function loadPrices(){
+  try{
+    const r = await fetch('prices.json', {cache:'no-cache'});
+    if(!r.ok) return;
+    const j = await r.json();
+    if(!j || !j.items) return;
+    const next = {};
+    for(const k in j.items){
+      const it = j.items[k];
+      next[k] = {n:it.n, u:it.u, packSize:it.pack, p:it.price, c:it.c};
+    }
+    ING = next;
+    PRICE_META = {source:j.source||'Пятёрочка', updatedAt:j.updatedAt||''};
+  }catch(e){}
+}
+
+/* ================= RECIPES ================= */
+const R=(id,n,m,t,k,p,f,c,serv,i,s)=>({id,n,m,t,k,p,f,c,serv,i,s});
+const RECIPES=[
+ /* ЗАВТРАКИ b1–b30 */
+ R('b1','Овсянка на молоке с бананом','b',10,340,12,7,54,1,{oats:60,milk:200,banana:100},'Вскипятите молоко, всыпьте хлопья и варите 5–7 минут, помешивая. Сверху — нарезанный банан.'),
+ R('b2','Омлет с помидором','b',10,260,19,17,6,1,{egg:2,milk:50,tomato:80,oil:5},'Взбейте яйца с молоком и щепоткой соли. Обжарьте помидор на масле 2 минуты, залейте смесью и готовьте под крышкой 5 минут.'),
+ R('b3','Творог с яблоком и орехами','b',5,300,22,12,28,1,{cottage:150,apple:100,nuts:15},'Яблоко нарежьте кубиками, орехи грубо порубите и смешайте с творогом.'),
+ R('b4','Гречневая каша с яйцом','b',20,330,15,9,48,1,{buckwheat:60,egg:1,oil:5},'Залейте гречку водой 1:2 и варите 15 минут. Яйцо отварите или пожарьте, добавьте масло.'),
+ R('b5','Бутерброд с яйцом и огурцом','b',10,310,18,12,32,1,{bread:80,egg:2,cucumber:60},'Сварите яйца вкрутую (9 минут), остудите и нарежьте. Выложите на хлеб вместе с ломтиками огурца.'),
+ R('b6','Йогурт с овсянкой и бананом','b',5,310,14,6,50,1,{yogurt:150,oats:30,banana:80},'Смешайте йогурт с хлопьями, оставьте на 5 минут, добавьте банан кружочками.'),
+ R('b7','Овсянка на воде с яблоком и орехами','b',10,330,9,10,52,1,{oats:60,apple:100,nuts:15},'Варите хлопья в воде 7 минут. Добавьте тёртое яблоко и рубленые орехи.'),
+ R('b8','Овсянка на воде с бананом','b',10,280,8,4,52,1,{oats:60,banana:100},'Варите хлопья в воде 7 минут, половину банана разомните в кашу, остальное нарежьте сверху.'),
+ R('b9','Тост с помидором и огурцом','b',5,210,6,6,32,1,{bread:80,tomato:80,cucumber:60,oil:5},'Подсушите хлеб на сухой сковороде, сбрызните маслом, выложите ломтики помидора и огурца.'),
+ R('b10','Сырники с яблоком','b',20,380,24,12,44,2,{cottage:300,egg:1,apple:100,oats:40,oil:5},'Смешайте творог, яйцо, тёртое яблоко и овсянку. Сформируйте сырники и жарьте по 3 минуты с каждой стороны.'),
+ R('b11','Овсянка с какао и бананом','b',10,360,13,8,58,1,{oats:60,milk:200,banana:80,cocoa:5},'Варите хлопья в молоке 5–7 минут, в конце добавьте какао. Сверху — банан.'),
+ R('b12','Омлет с сыром и зеленью','b',10,320,22,24,3,1,{egg:3,milk:30,cheese:30,greens:10,oil:5},'Взбейте яйца с молоком. Вылейте на разогретую сковороду, посыпьте сыром и зеленью, готовьте под крышкой 5 минут.'),
+ R('b13','Греческий йогурт с яблоком и мёдом','b',5,280,18,8,32,1,{greek:200,honey:15,apple:100,seeds:10},'Выложите йогурт в миску, добавьте нарезанное яблоко, семечки и мёд.'),
+ R('b14','Бутерброд с творогом и зеленью','b',5,290,18,10,30,1,{bread:80,cottage:100,greens:15,cucumber:50},'Намажьте хлеб творогом, посыпьте зеленью, добавьте ломтики огурца.'),
+ R('b15','Каша из бурого риса с яблоком','b',25,340,9,4,68,1,{brown_rice:70,milk:150,apple:100,honey:10},'Варите рис в молоке 20 минут. Добавьте тёртое яблоко и мёд.'),
+ R('b16','Яичница с помидорами и зеленью','b',10,290,17,20,8,1,{egg:3,tomato:120,greens:15,oil:8},'Обжарьте нарезанные помидоры 3 минуты, разбейте яйца, посыпьте зеленью, готовьте под крышкой 5 минут.'),
+ R('b17','Тост с яйцом и зеленью','b',15,350,18,20,26,1,{bread:80,egg:2,oil:5,greens:10},'Подсушите хлеб, сбрызните маслом. Сверху — яйца пашот или вкрутую, зелень.'),
+ R('b18','Овсянка с изюмом и орехами','b',10,350,11,10,56,1,{oats:60,milk:200,raisins:20,nuts:15},'Варите хлопья в молоке 5–7 минут. Добавьте изюм и рубленые орехи.'),
+ R('b19','Творожная запеканка с бананом','b',35,320,22,8,40,2,{cottage:300,egg:1,banana:100,oats:30},'Смешайте творог, яйцо, размятый банан и овсянку. Выпекайте при 180 °C 25 минут.'),
+ R('b20','Кефир с овсянкой и яблоком','b',5,300,12,5,52,1,{kefir:250,oats:40,apple:100,honey:10},'Залейте хлопья кефиром, оставьте на 5 минут. Добавьте тёртое яблоко и мёд.'),
+ R('b21','Омлет с брокколи и сыром','b',12,300,21,20,6,1,{egg:2,milk:30,broccoli:80,cheese:25,oil:5},'Брокколи отварите 3 минуты. Залейте взбитыми яйцами, посыпьте сыром, готовьте под крышкой 5 минут.'),
+ R('b22','Гречка с молоком и бананом','b',20,330,11,5,60,1,{buckwheat:60,milk:150,banana:80},'Варите гречку 15 минут, добавьте горячее молоко и нарезанный банан.'),
+ R('b23','Сэндвич с тунцом','b',10,360,24,12,38,1,{bread:80,tuna:80,cucumber:50,greens:10},'Разомните тунец вилкой, выложите на хлеб, добавьте огурец и зелень.'),
+ R('b24','Овсянка с мёдом и семечками','b',10,340,11,10,52,1,{oats:60,milk:200,honey:15,seeds:10},'Варите хлопья в молоке 5–7 минут, в конце добавьте мёд и семечки.'),
+ R('b25','Йогурт с овсянкой и изюмом','b',5,300,14,5,48,1,{yogurt:200,oats:30,raisins:15},'Смешайте йогурт с хлопьями и изюмом, оставьте на 5 минут.'),
+ R('b26','Яичница с сыром и хлебом','b',8,380,22,26,16,1,{egg:2,cheese:30,bread:60,oil:5},'Обжарьте яйца, посыпьте сыром. Подавайте с ломтиком хлеба.'),
+ R('b27','Творог с бананом и какао','b',5,320,22,8,40,1,{cottage:150,banana:100,cocoa:5},'Смешайте творог с нарезанным бананом, посыпьте какао.'),
+ R('b28','Овсянка с яблоком и корицей','b',10,300,9,5,54,1,{oats:60,milk:200,apple:100},'Варите хлопья в молоке, добавьте тёртое яблоко, можно щепотку корицы.'),
+ R('b29','Греческий йогурт с бананом и орехами','b',5,340,20,12,36,1,{greek:200,banana:100,nuts:15},'Смешайте йогурт с нарезанным бананом и рублеными орехами.'),
+ R('b30','Блинчики из овсянки с творогом','b',20,360,20,10,48,2,{oats:80,egg:2,milk:100,cottage:150,oil:5},'Смешайте овсянку, яйца, молоко. Жарьте тонкие блинчики. Подавайте с творогом.'),
+
+ /* ОБЕДЫ l1–l35 */
+ R('l1','Куриный суп с лапшой','l',40,380,28,10,40,2,{chicken:200,potato:300,carrot:100,onion:60,pasta:60},'Варите курицу в 800 мл воды 15 минут. Добавьте картофель, морковь и лук, через 10 минут — макароны и варите ещё 7 минут.'),
+ R('l2','Чечевичный суп','l',35,350,18,8,48,2,{lentils:140,carrot:100,onion:80,potato:200,oil:15},'Обжарьте лук и морковь на масле 5 минут. Добавьте чечевицу, картофель и 1 л воды, варите 25 минут.'),
+ R('l3','Гречка с курицей и овощами','l',30,480,32,12,48,2,{buckwheat:140,chicken:260,onion:80,carrot:100,oil:15},'Обжарьте кубики курицы с луком и морковью 8 минут. Добавьте гречку и воду 1:2, тушите под крышкой 15 минут.'),
+ R('l4','Рис с тунцом и овощами','l',20,430,24,10,52,2,{rice:140,tuna:185,cucumber:160,tomato:160},'Отварите рис 15 минут. Смешайте с тунцом, огурцом и помидором кубиками.'),
+ R('l5','Салат с нутом','l',10,350,14,14,40,2,{chickpeas:400,cucumber:200,tomato:200,onion:40,oil:20},'Нут промойте, овощи нарежьте, лук — тонкими полукольцами. Смешайте, заправьте маслом и солью.'),
+ R('l6','Паста с томатным соусом и сыром','l',20,520,20,14,76,2,{pasta:180,tomatoes_c:400,garlic:6,cheese:40,oil:15},'Отварите пасту. Прогрейте томаты с чесноком на масле 7 минут, смешайте с пастой, посыпьте тёртым сыром.'),
+ R('l7','Гречка с овощами','l',25,400,12,10,64,2,{buckwheat:140,carrot:100,onion:80,pepper:120,oil:15},'Обжарьте лук, морковь и перец 7 минут. Добавьте гречку и воду 1:2, тушите под крышкой 15 минут.'),
+ R('l8','Паста с кабачком и томатами','l',25,450,14,12,70,2,{pasta:180,zucchini:200,tomatoes_c:400,garlic:6,oil:15},'Обжарьте кабачок кубиками 5 минут, добавьте томаты и чеснок, тушите 7 минут. Смешайте с отваренной пастой.'),
+ R('l9','Борщ без мяса','l',50,320,10,10,48,3,{potato:300,cabbage:250,carrot:100,onion:80,tomatoes_c:200,oil:15,greens:20},'Обжарьте лук и морковь, добавьте томаты. В кипящую воду положите картофель, капусту, зажарку, варите 20 минут.'),
+ R('l10','Суп с фрикадельками','l',40,420,28,14,40,3,{mince:300,egg:1,potato:300,carrot:100,onion:80,greens:15},'Смешайте фарш с яйцом, сформируйте фрикадельки. Варите в 1 л воды 10 минут, добавьте овощи, варите ещё 15 минут.'),
+ R('l11','Куриный суп с рисом','l',40,400,28,8,52,2,{chicken:200,rice:80,carrot:100,onion:60,greens:15},'Варите курицу 15 минут, добавьте рис и овощи, варите 15 минут. Посыпьте зеленью.'),
+ R('l12','Салат «Цезарь» с курицей','l',20,450,32,20,28,2,{chicken:200,bread:80,cheese:30,cucumber:100,oil:15,greens:20},'Обжарьте курицу, нарежьте. Подсушите хлеб кубиками. Смешайте с овощами, сыром и маслом.'),
+ R('l13','Салат из свежих овощей с яйцом','l',10,260,14,14,16,2,{egg:2,cucumber:150,tomato:150,greens:20,oil:15},'Нарежьте овощи, яйца вкрутую, заправьте маслом.'),
+ R('l14','Плов с курицей','l',50,520,30,14,64,3,{rice:200,chicken:300,carrot:150,onion:100,oil:20,garlic:10},'Обжарьте курицу с луком и морковью. Добавьте рис, воду 1:2, чеснок. Тушите под крышкой 25 минут.'),
+ R('l15','Гречка с овощами и зеленью','l',30,380,14,10,56,2,{buckwheat:140,onion:80,carrot:100,oil:15,greens:15},'Обжарьте лук и морковь, добавьте гречку и воду 1:2, тушите 15 минут. Посыпьте зеленью.'),
+ R('l16','Киноа с овощами и тофу','l',25,420,20,14,50,2,{quinoa:120,tofu:200,pepper:120,broccoli:150,oil:15},'Отварите киноа. Обжарьте тофу кубиками 5 минут, добавьте овощи, тушите 7 минут. Смешайте с киноа.'),
+ R('l17','Булгур с курицей и зеленью','l',30,460,32,10,54,2,{bulgur:140,chicken:260,carrot:80,onion:60,greens:20,oil:12},'Обжарьте курицу с овощами, добавьте булгур и воду 1:2, тушите 15 минут. Посыпьте зеленью.'),
+ R('l18','Суп-пюре из брокколи','l',30,280,12,10,32,2,{broccoli:400,potato:200,onion:80,milk:200,oil:15},'Отварите брокколи, картофель и лук 15 минут. Пробейте блендером, добавьте молоко и масло.'),
+ R('l19','Салат с тунцом и фасолью','l',10,380,26,12,38,2,{tuna:185,beans:400,cucumber:150,tomato:150,onion:40,oil:15},'Смешайте тунец, фасоль, овощи. Заправьте маслом.'),
+ R('l20','Куриный суп с брокколи','l',35,360,28,8,36,2,{chicken:200,broccoli:200,potato:150,carrot:80,greens:15},'Варите курицу 15 минут, добавьте овощи, варите ещё 15 минут. Посыпьте зеленью.'),
+ R('l21','Макароны с фаршем по-домашнему','l',30,560,32,18,64,3,{pasta:250,mince:300,tomatoes_c:400,onion:80,oil:15},'Обжарьте фарш с луком, добавьте томаты, тушите 10 минут. Смешайте с отваренной пастой.'),
+ R('l22','Салат из капусты с морковью','l',10,180,4,10,18,2,{cabbage:300,carrot:100,oil:15,greens:15},'Нашинкуйте капусту, натрите морковь, заправьте маслом, посыпьте зеленью.'),
+ R('l23','Рис с курицей и овощами','l',35,480,30,12,56,2,{rice:140,chicken:260,carrot:100,pepper:120,oil:15},'Обжарьте курицу с овощами, добавьте рис и воду 1:2, тушите 20 минут.'),
+ R('l24','Кускус с овощами и нутом','l',20,420,16,10,64,2,{couscous:140,chickpeas:200,zucchini:150,pepper:100,oil:15},'Залейте кускус кипятком 1:1, накройте на 5 минут. Обжарьте овощи с нутом, смешайте.'),
+ R('l25','Салат с курицей и яблоком','l',15,380,30,14,28,2,{chicken:200,apple:150,cucumber:100,greens:20,oil:12},'Обжарьте курицу, нарежьте. Смешайте с яблоком, огурцом и зеленью.'),
+ R('l26','Томатный суп с фасолью','l',35,340,16,8,48,3,{beans:400,tomatoes_c:400,onion:80,carrot:80,oil:15,greens:15},'Обжарьте лук и морковь, добавьте томаты и фасоль, 700 мл воды, варите 20 минут.'),
+ R('l27','Паста с лососем и брокколи','l',25,520,30,20,48,2,{pasta:180,salmon:200,broccoli:150,oil:12},'Отварите пасту и брокколи. Обжарьте лосось кубиками 5 минут, смешайте с пастой и брокколи.'),
+ R('l28','Суп с чечевицей и томатами','l',35,340,18,8,46,2,{lentils:140,tomatoes_c:400,carrot:80,onion:60,oil:12},'Обжарьте лук с морковью, добавьте томаты, чечевицу и 800 мл воды. Варите 25 минут.'),
+ R('l29','Рис с овощами и яйцом','l',20,400,16,12,56,2,{rice:140,egg:2,pepper:120,carrot:80,oil:15},'Отварите рис. Обжарьте овощи, добавьте рис и яйца, перемешайте.'),
+ R('l30','Салат «Греческий»','l',10,380,16,24,24,2,{cucumber:200,tomato:200,cheese:60,onion:40,oil:20},'Нарежьте овощи, добавьте сыр кубиками и масло.'),
+ R('l31','Гречка с фаршем','l',30,520,32,18,52,2,{buckwheat:140,mince:250,onion:80,carrot:100,oil:15},'Обжарьте фарш с луком и морковью, добавьте гречку и воду 1:2, тушите 15 минут.'),
+ R('l32','Куриный суп с чечевицей','l',40,380,28,8,44,3,{chicken:250,lentils:120,carrot:100,onion:80,greens:15},'Варите курицу 15 минут, добавьте чечевицу и овощи, варите 20 минут.'),
+ R('l33','Салат с фасолью и кукурузой','l',10,360,14,12,50,2,{beans:400,corn:170,cucumber:150,onion:40,oil:15},'Смешайте фасоль, кукурузу, огурец и лук. Заправьте маслом.'),
+ R('l34','Булгур с овощами и тофу','l',25,400,18,12,54,2,{bulgur:140,tofu:200,zucchini:150,carrot:80,oil:15},'Обжарьте тофу, добавьте овощи, тушите 7 минут. Смешайте с отваренным булгуром.'),
+ R('l35','Щи из свежей капусты','l',45,300,12,8,44,3,{cabbage:300,potato:250,carrot:100,onion:80,tomatoes_c:200,oil:15},'Обжарьте лук и морковь с томатами. В воду положите картофель, капусту, зажарку, варите 25 минут.'),
+
+ /* УЖИНЫ d1–d35 */
+ R('d1','Курица, запечённая с картофелем','d',50,520,36,18,48,3,{chicken:450,potato:750,onion:120,oil:24},'Нарежьте картофель и лук, смешайте с курицей, маслом и солью. Запекайте при 200 °C около 40 минут.'),
+ R('d2','Тушёная капуста с фаршем','d',40,400,26,18,28,3,{cabbage:750,mince:300,onion:120,carrot:120,oil:24},'Обжарьте фарш с луком и морковью 8 минут. Добавьте нашинкованную капусту и тушите под крышкой 25 минут.'),
+ R('d3','Хек с рисом и брокколи','d',30,420,32,8,48,3,{hake:450,rice:180,broccoli:360,oil:15},'Рис варите 15 минут. Рыбу и брокколи запекайте при 200 °C 15 минут, сбрызнув маслом.'),
+ R('d4','Овощное рагу с нутом','d',35,380,14,12,50,3,{zucchini:450,pepper:240,tomato:300,chickpeas:400,onion:120,oil:24},'Обжарьте лук и перец 5 минут, добавьте кабачок и помидор, тушите 15 минут, в конце добавьте нут.'),
+ R('d5','Котлеты с гречкой','d',40,560,34,22,52,3,{mince:360,egg:1,onion:90,buckwheat:180,oil:24},'Смешайте фарш, яйцо и тёртый лук, сформируйте котлеты и жарьте по 5 минут с каждой стороны. Гречку варите 15 минут.'),
+ R('d6','Тофу с овощами и рисом','d',30,480,22,16,58,3,{tofu:390,rice:180,pepper:240,broccoli:300,carrot:120,oil:24},'Рис варите 15 минут. Обжарьте кубики тофу 5 минут, добавьте нарезанные овощи и тушите 8 минут.'),
+ R('d7','Запеканка из кабачков с сыром','d',45,360,20,20,24,3,{zucchini:750,egg:2,cheese:120,oil:15},'Натрите кабачок, отожмите сок, смешайте с яйцом и тёртым сыром. Выпекайте при 190 °C 30 минут.'),
+ R('d8','Паста с курицей и брокколи','d',30,540,36,16,60,3,{pasta:240,chicken:360,broccoli:300,oil:24},'Отварите пасту. Обжарьте курицу 8 минут, добавьте брокколи и 3 ложки воды, тушите 5 минут. Смешайте с пастой.'),
+ R('d9','Запечённые овощи с картофелем','d',50,350,10,12,50,3,{potato:750,carrot:150,onion:120,pepper:180,oil:24},'Нарежьте овощи крупно, смешайте с маслом и солью. Запекайте при 200 °C 40 минут.'),
+ R('d10','Куриные котлеты на пару с овощами','d',35,380,34,12,28,3,{chicken:400,egg:1,onion:80,broccoli:300,carrot:120},'Измельчите курицу с луком, добавьте яйцо, сформируйте котлеты. Готовьте на пару 20 минут. Овощи — на пару 10 минут.'),
+ R('d11','Тушёная курица с овощами','d',40,420,34,14,36,3,{chicken:450,zucchini:300,pepper:200,tomatoes_c:400,onion:100,oil:20},'Обжарьте курицу кубиками 8 минут, добавьте овощи и томаты, тушите 20 минут.'),
+ R('d12','Рыбные котлеты с картофелем','d',40,460,32,16,44,3,{hake:450,egg:1,onion:80,bread:80,potato:600,oil:24},'Измельчите рыбу с луком и размоченным хлебом, добавьте яйцо. Жарьте по 4 минуты с каждой стороны. Картофель отварите.'),
+ R('d13','Плов с индейкой','d',50,500,34,12,64,3,{rice:220,chicken:400,carrot:150,onion:100,oil:24,garlic:10},'Обжарьте индейку с луком и морковью. Добавьте рис, воду 1:2 и чеснок, тушите 25 минут.'),
+ R('d14','Киноа с курицей и овощами','d',30,460,34,12,48,3,{quinoa:160,chicken:400,broccoli:200,pepper:150,oil:20},'Отварите киноа. Обжарьте курицу 8 минут, добавьте овощи, тушите 7 минут. Смешайте.'),
+ R('d15','Запечённая рыба с овощами','d',35,380,34,12,32,3,{hake:500,zucchini:300,pepper:200,onion:100,oil:20},'Выложите рыбу и овощи на противень, сбрызните маслом. Запекайте при 200 °C 25 минут.'),
+ R('d16','Куриное филе в томатном соусе с рисом','d',35,480,36,12,56,3,{chicken:450,tomatoes_c:400,rice:180,onion:100,oil:20},'Обжарьте курицу с луком, добавьте томаты, тушите 15 минут. Подавайте с отваренным рисом.'),
+ R('d17','Овощное рагу с фасолью','d',35,360,16,10,50,3,{beans:400,zucchini:300,pepper:200,tomatoes_c:400,onion:100,oil:20},'Обжарьте лук, добавьте овощи и томаты, тушите 15 минут. В конце добавьте фасоль.'),
+ R('d18','Куриные бёдра с гречкой','d',45,540,36,20,48,3,{chicken:500,buckwheat:180,onion:100,carrot:100,oil:20},'Обжарьте курицу до корочки, добавьте лук и морковь. Гречку отварите отдельно.'),
+ R('d19','Запеканка картофельная с фаршем','d',55,560,32,22,56,4,{potato:800,mince:400,onion:100,egg:1,milk:150,oil:20},'Отварите картофель, сделайте пюре с молоком. Фарш обжарьте с луком. Слоями выложите в форму, запекайте 25 минут при 190 °C.'),
+ R('d20','Тофу с брокколи и рисом','d',25,440,22,14,54,3,{tofu:390,broccoli:300,rice:180,oil:20},'Обжарьте тофу 5 минут, добавьте брокколи, тушите 7 минут. Подавайте с рисом.'),
+ R('d21','Курица с булгуром и овощами','d',35,500,36,14,54,3,{chicken:450,bulgur:180,carrot:100,pepper:150,oil:20},'Обжарьте курицу, добавьте овощи, тушите 10 минут. Булгур отварите отдельно.'),
+ R('d22','Хек, запечённый с картофелем','d',45,420,34,12,44,3,{hake:500,potato:700,onion:100,oil:20},'Нарежьте картофель, выложите с рыбой на противень, сбрызните маслом. Запекайте 35 минут при 200 °C.'),
+ R('d23','Индейка с овощами и рисом','d',35,480,36,12,52,3,{chicken:450,rice:180,broccoli:200,pepper:150,oil:20},'Обжарьте индейку, добавьте овощи, тушите 10 минут. Рис отварите.'),
+ R('d24','Запеканка из брокколи с сыром','d',40,340,22,20,20,3,{broccoli:600,egg:3,cheese:120,milk:100,oil:15},'Отварите брокколи. Взбейте яйца с молоком, залейте брокколи, посыпьте сыром. Запекайте 25 минут при 190 °C.'),
+ R('d25','Свинина с овощами','d',40,540,34,28,32,3,{pork:450,zucchini:300,pepper:200,onion:100,oil:20},'Обжарьте свинину кубиками 8 минут, добавьте овощи, тушите 15 минут.'),
+ R('d26','Рис с фасолью и овощами','d',30,440,18,10,68,3,{rice:180,beans:400,pepper:200,tomatoes_c:400,onion:100,oil:20},'Обжарьте лук и перец, добавьте томаты, фасоль, тушите 10 минут. Подавайте с рисом.'),
+ R('d27','Курица с кускусом и овощами','d',30,480,34,12,54,3,{chicken:450,couscous:180,zucchini:200,carrot:100,oil:20},'Залейте кускус кипятком. Обжарьте курицу с овощами 15 минут. Смешайте.'),
+ R('d28','Рыба в духовке с брокколи','d',35,380,34,14,24,3,{hake:500,broccoli:400,cheese:60,oil:15},'Выложите рыбу и брокколи на противень, посыпьте сыром. Запекайте 25 минут при 200 °C.'),
+ R('d29','Котлеты из индейки с овощами','d',40,440,34,16,36,3,{chicken:450,egg:1,onion:100,zucchini:300,oil:20},'Измельчите индейку с луком, добавьте яйцо. Жарьте котлеты по 5 минут. Овощи — на пару или запеките.'),
+ R('d30','Тушёные овощи с курицей','d',40,400,32,14,32,3,{chicken:400,zucchini:300,cabbage:300,tomatoes_c:400,oil:20},'Обжарьте курицу, добавьте овощи и томаты, тушите 20 минут.'),
+ R('d31','Паста с лососем и зеленью','d',25,560,34,22,52,3,{pasta:240,salmon:300,greens:40,oil:20},'Отварите пасту. Обжарьте лосось 5 минут, добавьте зелень, смешайте с пастой.'),
+ R('d32','Киноа с овощами и фасолью','d',30,420,18,12,60,3,{quinoa:160,beans:400,zucchini:250,pepper:150,oil:20},'Отварите киноа. Обжарьте овощи, добавьте фасоль, тушите 10 минут. Смешайте с киноа.'),
+ R('d33','Куриные котлеты с рисом','d',40,500,34,16,52,3,{chicken:450,egg:1,onion:100,rice:180,oil:20},'Измельчите курицу с луком, добавьте яйцо, сформируйте котлеты. Жарьте по 5 минут. Рис отварите.'),
+ R('d34','Запечённая индейка с картофелем','d',50,500,36,16,48,3,{chicken:450,potato:700,onion:100,oil:20},'Выложите индейку и картофель на противень, сбрызните маслом. Запекайте 40 минут при 200 °C.'),
+ R('d35','Овощное рагу с тофу','d',35,380,22,14,40,3,{tofu:390,zucchini:300,pepper:200,tomatoes_c:400,onion:100,oil:20},'Обжарьте тофу кубиками 5 минут, добавьте овощи и томаты, тушите 15 минут.'),
+
+ /* ПЕРЕКУСЫ s1–s20 */
+ R('s1','Яблоко и горсть орехов','s',2,200,5,12,22,1,{apple:150,nuts:20},'Ничего готовить не нужно.'),
+ R('s2','Банан','s',1,105,1,0,27,1,{banana:120},'Ничего готовить не нужно.'),
+ R('s3','Яйца вкрутую','s',12,150,12,10,0,1,{egg:2},'Варите яйца 9 минут, остудите в холодной воде.'),
+ R('s4','Йогурт с яблоком','s',3,130,6,3,20,1,{yogurt:150,apple:80},'Нарежьте яблоко кубиками и смешайте с йогуртом.'),
+ R('s5','Морковь и огурец','s',3,60,2,0,10,1,{carrot:80,cucumber:80},'Нарежьте овощи палочками.'),
+ R('s6','Творог с мёдом','s',2,180,18,5,16,1,{cottage:150,honey:15},'Смешайте творог с мёдом.'),
+ R('s7','Греческий йогурт с семечками','s',2,180,14,8,12,1,{greek:150,seeds:10},'Смешайте йогурт с семечками.'),
+ R('s8','Кефир с яблоком','s',2,150,6,3,22,1,{kefir:200,apple:100},'Нарежьте яблоко, залейте кефиром.'),
+ R('s9','Орехи и изюм','s',1,230,6,14,20,1,{nuts:25,raisins:20},'Смешайте орехи и изюм.'),
+ R('s10','Бутерброд с сыром','s',3,220,10,12,18,1,{bread:50,cheese:30},'Выложите сыр на хлеб.'),
+ R('s11','Банан с орехами','s',2,220,4,10,30,1,{banana:120,nuts:15},'Нарежьте банан, посыпьте орехами.'),
+ R('s12','Творог с зеленью и огурцом','s',3,160,18,6,6,1,{cottage:150,cucumber:80,greens:10},'Смешайте творог с нарезанным огурцом и зеленью.'),
+ R('s13','Яблоко с мёдом и орехами','s',2,220,3,12,26,1,{apple:150,honey:10,nuts:15},'Нарежьте яблоко, полейте мёдом, посыпьте орехами.'),
+ R('s14','Хумус с морковью','s',3,180,8,10,16,1,{chickpeas:100,carrot:100,oil:8},'Разомните нут с маслом, подавайте с палочками моркови.'),
+ R('s15','Йогурт с бананом и какао','s',3,200,10,4,32,1,{yogurt:150,banana:80,cocoa:3},'Смешайте йогурт с нарезанным бананом, посыпьте какао.'),
+ R('s16','Тост с творогом и помидором','s',5,240,14,8,26,1,{bread:60,cottage:100,tomato:80},'Намажьте хлеб творогом, сверху — ломтик помидора.'),
+ R('s17','Кефир с овсянкой','s',3,220,10,5,34,1,{kefir:250,oats:30},'Залейте хлопья кефиром, оставьте на 5 минут.'),
+ R('s18','Яйцо и огурец','s',10,120,10,8,2,1,{egg:2,cucumber:100},'Сварите яйца, нарежьте огурец.'),
+ R('s19','Банан с творогом','s',3,240,16,6,32,1,{banana:100,cottage:100},'Нарежьте банан, смешайте с творогом.'),
+ R('s20','Орехи и яблоко','s',2,220,4,14,22,1,{nuts:25,apple:100},'Нарежьте яблоко, добавьте орехи.'),
+
+ /* СЛАДКОЕ / НАПИТКИ t1–t15 */
+ R('t1','Какао на молоке','t',5,180,8,8,20,1,{milk:200,cocoa:8,honey:10},'Подогрейте молоко, добавьте какао и мёд, перемешайте.'),
+ R('t2','Смузи банан-кефир','t',3,200,8,4,34,1,{banana:100,kefir:200},'Взбейте банан с кефиром блендером.'),
+ R('t3','Смузи яблоко-йогурт','t',3,180,8,3,30,1,{apple:100,yogurt:150},'Взбейте яблоко с йогуртом.'),
+ R('t4','Творожный десерт с какао','t',5,220,20,8,18,1,{cottage:150,cocoa:5,honey:10},'Смешайте творог, какао и мёд.'),
+ R('t5','Запечённое яблоко с мёдом','t',20,180,1,2,42,1,{apple:150,honey:15,nuts:10},'Вырежьте сердцевину, добавьте мёд и орехи. Запекайте 15 минут при 180 °C.'),
+ R('t6','Овсяное печенье','t',25,120,3,5,16,6,{oats:150,banana:100,egg:1,nuts:30},'Смешайте ингредиенты, сформируйте печенья. Выпекайте 15 минут при 180 °C.'),
+ R('t7','Йогуртовый десерт с изюмом','t',3,200,10,4,30,1,{greek:150,raisins:20,honey:10},'Смешайте йогурт, изюм и мёд.'),
+ R('t8','Смузи с овсянкой','t',3,240,10,5,42,1,{oats:30,banana:100,milk:200},'Взбейте всё блендером.'),
+ R('t9','Творог с бананом и какао','t',3,260,22,8,28,1,{cottage:150,banana:80,cocoa:5},'Смешайте творог с нарезанным бананом, посыпьте какао.'),
+ R('t10','Кефир с корицей и мёдом','t',2,150,6,3,22,1,{kefir:250,honey:15},'Смешайте кефир с мёдом, добавьте щепотку корицы.'),
+ R('t11','Греческий йогурт с бананом','t',3,260,18,8,28,1,{greek:200,banana:100},'Смешайте йогурт с нарезанным бананом.'),
+ R('t12','Молочный коктейль с бананом','t',3,240,10,6,38,1,{milk:200,banana:100,honey:10},'Взбейте всё блендером.'),
+ R('t13','Творожная запеканка с изюмом','t',35,240,20,6,28,3,{cottage:400,egg:2,raisins:40,oats:40},'Смешайте ингредиенты, выложите в форму. Выпекайте 30 минут при 180 °C.'),
+ R('t14','Овсянка с какао и мёдом','t',10,260,9,6,44,1,{oats:50,milk:200,cocoa:5,honey:10},'Варите хлопья в молоке, в конце добавьте какао и мёд.'),
+ R('t15','Смузи с творогом и яблоком','t',3,220,16,5,28,1,{cottage:150,apple:100,kefir:100},'Взбейте всё блендером.'),
+
+ /* ЗАГОТОВКИ / СОУСЫ g1–g15 */
+ R('g1','Томатный соус с чесноком','g',15,120,3,6,14,4,{tomatoes_c:400,garlic:10,oil:20,greens:15},'Прогрейте томаты с чесноком на масле 10 минут. Посыпьте зеленью.'),
+ R('g2','Соус из йогурта с зеленью','g',5,80,5,4,6,4,{yogurt:200,greens:20,garlic:3},'Смешайте йогурт, зелень и чеснок.'),
+ R('g3','Заправка из масла и лимона','g',2,90,0,10,1,4,{oil:60,lemon:20,greens:10},'Смешайте масло, сок лимона и зелень.'),
+ R('g4','Варёная гречка на неделю','g',20,330,13,3,62,4,{buckwheat:250},'Отварите гречку в воде 1:2, остудите, храните в контейнере до 3 дней.'),
+ R('g5','Варёный рис на неделю','g',20,340,7,1,74,4,{rice:250},'Отварите рис, остудите, храните в контейнере до 3 дней.'),
+ R('g6','Запечённая курица на неделю','g',40,330,62,8,0,4,{chicken:600,oil:10},'Запекайте курицу 30 минут при 200 °C. Храните в холодильнике до 3 дней.'),
+ R('g7','Варёные яйца на неделю','g',12,210,18,15,0,4,{egg:3},'Сварите яйца вкрутую, храните в холодильнике до 5 дней.'),
+ R('g8','Овощная нарезка на неделю','g',10,60,2,0,10,4,{cucumber:200,tomato:200,carrot:150},'Нарежьте овощи, храните в контейнере до 3 дней.'),
+ R('g9','Тушёные овощи на неделю','g',30,180,5,8,22,4,{zucchini:300,pepper:200,onion:100,oil:20},'Обжарьте овощи 5 минут, тушите 15 минут. Храните до 3 дней.'),
+ R('g10','Соус песто из зелени (упрощённый)','g',10,180,3,18,4,4,{greens:60,oil:60,garlic:5,nuts:30},'Пробейте всё блендером.'),
+ R('g11','Домашний хумус','g',10,200,8,12,16,4,{chickpeas:400,oil:30,garlic:5,lemon:20},'Пробейте нут с маслом, чесноком и лимоном блендером.'),
+ R('g12','Творожный крем с зеленью','g',5,140,15,6,5,4,{cottage:300,greens:20,garlic:3},'Смешайте творог, зелень и чеснок.'),
+ R('g13','Запечённые овощи на неделю','g',45,200,4,10,22,4,{potato:300,carrot:200,onion:100,oil:20},'Нарежьте овощи, запекайте 30 минут при 200 °C.'),
+ R('g14','Фрикадельки из индейки на неделю','g',30,260,36,12,2,4,{chicken:500,egg:1,onion:80},'Измельчите индейку с луком, добавьте яйцо. Запекайте 20 минут при 200 °C.'),
+ R('g15','Салат-заготовка из капусты','g',10,90,2,5,10,4,{cabbage:400,carrot:100,oil:20},'Нашинкуйте капусту, натрите морковь, заправьте маслом. Храните до 2 дней.')
+];
+const RID=Object.fromEntries(RECIPES.map(r=>[r.id,r]));
+const MEAT=['chicken','mince','pork'],FISH=['hake','tuna','salmon'],DAIRY=['milk','yogurt','greek','kefir','sourcream','cottage','cheese'],EGG=['egg'];
+const SLOT={b:'Завтрак',l:'Обед',d:'Ужин',s:'Перекус',t:'Сладкое',g:'Заготовка'};
+const DAYS=['Понедельник','Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье'];
+const DISLIKES=[['onion','Лук'],['carrot','Морковь'],['cabbage','Капуста'],['broccoli','Брокколи'],['zucchini','Кабачки'],['pepper','Перец'],['tomato','Помидоры'],['cucumber','Огурцы'],['garlic','Чеснок'],['chickpeas','Нут'],['lentils','Чечевица'],['tofu','Тофу'],['nuts','Орехи'],['cheese','Сыр'],['cottage','Творог'],['banana','Бананы'],['hake','Рыба хек'],['tuna','Тунец'],['salmon','Лосось'],['mince','Фарш'],['buckwheat','Гречка'],['beans','Фасоль'],['corn','Кукуруза'],['raisins','Изюм']];
+const DMAP={tomato:['tomato','tomatoes_c']};
+const QUESTIONS=[
+ {id:'goal',t:'Какая у вас цель?',opts:[['lose','Снизить вес','порции немного меньше'],['keep','Держать форму','стандартные порции'],['gain','Набрать массу','порции больше']]},
+ {id:'people',t:'Сколько человек питается?',type:'count',min:1,max:6},
+ {id:'diet',t:'Как вы питаетесь?',opts:[['all','Ем всё'],['nomeat','Без мяса','рыба — можно'],['veg','Вегетарианское','без мяса и рыбы'],['nodairy','Без молочного'],['vegan','Веганское']]},
+ {id:'dislikes',t:'Что вы не любите?',sub:'Исключим из плана. Можно пропустить.',type:'multi'},
+ {id:'snack',t:'Сколько приёмов пищи?',opts:[['3','3 раза в день'],['4','3 раза и перекус']]},
+ {id:'time',t:'Сколько времени на готовку?',sub:'На одно блюдо.',opts:[['20','До 20 минут'],['40','До 40 минут'],['0','Не важно']]},
+ {id:'batch',t:'Готовить сразу на два дня?',sub:'Обед и ужин повторяются через день — меньше возни.',opts:[['no','Нет, каждый день новое'],['yes','Да, на два дня']]},
+ {id:'store',t:'Где покупаете продукты?',opts:[['disc','Дискаунтер','цены ниже'],['super','Пятёрочка','средние цены'],['prem','Рынок или премиум','цены выше']]},
+ {id:'budget',t:'Бюджет на неделю',sub:'На всех, только продукты.',type:'range',min:1000,max:30000,step:500}
+];
+
+/* ================= LOGIC ================= */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const has=(r,list)=>Object.keys(r.i).some(k=>list.includes(k));
+function dietOk(r,a){
+ const d=a.diet||'all';
+ if(d==='all')return true;
+ if(has(r,MEAT))return false;
+ if((d==='veg'||d==='vegan')&&has(r,FISH))return false;
+ if((d==='nodairy'||d==='vegan')&&has(r,DAIRY))return false;
+ if(d==='vegan'&&has(r,EGG))return false;
+ return true;
+}
+function disSet(a){const s=[];(a.dislikes||[]).forEach(k=>(DMAP[k]||[k]).forEach(x=>s.push(x)));return s}
+function pool(m,a){
+ const base=RECIPES.filter(r=>r.m===m&&dietOk(r,a));
+ const dis=disSet(a),lim=+a.time||0;
+ const levels=[r=>!has(r,dis)&&(!lim||r.t<=lim),r=>!has(r,dis),()=>true];
+ for(let i=0;i<3;i++){
+  const list=base.filter(levels[i]);
+  if(list.length>=2||(i===2&&list.length>0))return{list,level:i};
+ }
+ return{list:base,level:2};
+}
+function unitCost(r){
+ let s=0;
+ for(const k in r.i){
+  const g=ING[k]; if(!g) continue;
+  s += r.i[k] * g.p / (g.packSize||1);
+ }
+ return s;
+}
+const factor=a=>(+a.people||1)*({lose:.85,keep:1,gain:1.2}[a.goal]||1);
+const storeMult=a=>STORE_MULT[a.store]||1;
+function pick(arr,w,rng){
+ const sum=w.reduce((x,y)=>x+y,0);let t=rng()*sum;
+ for(let i=0;i<arr.length;i++){t-=w[i];if(t<=0)return arr[i]}
+ return arr[arr.length-1];
+}
+function sequence(m,a,rng,bias){
+ const {list,level}=pool(m,a);
+ const sorted=[...list].sort((x,y)=>unitCost(x)-unitCost(y));
+ const step=(a.batch==='yes'&&(m==='l'||m==='d'))?2:1;
+ const keep=Math.min(3,sorted.length-1);
+ let recent=[];const out=[];
+ for(let d=0;d<7;d+=step){
+  let c=sorted.filter(r=>!recent.includes(r.id));
+  if(!c.length)c=sorted;
+  const w=c.map((r,i)=>Math.exp(-bias*i/Math.max(1,c.length-1)));
+  const r=pick(c,w,rng);
+  for(let j=0;j<step&&d+j<7;j++)out[d+j]=r.id;
+  recent.push(r.id);if(keep>0)recent=recent.slice(-keep);else recent=[];
+ }
+ return{out,level};
+}
+function shopping(plan,f){
+ const tot={};
+ plan.forEach(day=>day.forEach(e=>{
+  const r=RID[e.id]; if(!r) return;
+  for(const k in r.i) tot[k]=(tot[k]||0)+r.i[k]*f;
+ }));
+ return Object.keys(tot).map(k=>{
+  const g=ING[k]; if(!g) return null;
+  const need=tot[k];
+  const packSize=g.packSize||1;
+  const packs=Math.max(1, Math.ceil(need/packSize - 1e-9));
+  const q=packs*packSize;
+  const cost=packs*g.p;
+  return {k,n:g.n,u:g.u,q,packs,packSize,c:g.c,cost};
+ }).filter(Boolean);
+}
+function totals(a,plan){
+ const items=shopping(plan,factor(a));
+ const total=Math.round(items.reduce((s,i)=>s+i.cost,0)*storeMult(a)/10)*10;
+ return{items,total};
+}
+function generate(a){
+ const slots=a.snack==='4'?['b','l','d','s']:['b','l','d'];
+ let best=null,relaxed=false;
+ for(let i=0;i<8;i++){
+  const rng=mulberry32((a.seed||1)+i*7919);
+  const seqs={};let rel=false;
+  slots.forEach(m=>{const s=sequence(m,a,rng,i);seqs[m]=s.out;if(s.level>0)rel=true});
+  const plan=[];
+  for(let d=0;d<7;d++)plan.push(slots.map(m=>({m,id:seqs[m][d]})));
+  const t=totals(a,plan);
+  if(!best||t.total<best.total){best={plan,total:t.total};relaxed=rel}
+  if(t.total<=a.budget){best={plan,total:t.total};relaxed=rel;break}
+ }
+ return{plan:best.plan,relaxed};
+}
+function swap(a,plan,d,m,rng){
+ const cur=plan[d].find(e=>e.m===m);
+ const {list}=pool(m,a);
+ const c=list.filter(r=>r.id!==cur.id&&!plan[d].some(e=>e.id===r.id));
+ if(!c.length)return false;
+ cur.id=c[Math.floor(rng()*c.length)].id;return true;
+}
+const money=n=>String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'\u00a0')+'\u00a0₽';
+function qty(u,q,round){
+ if(u==='pcs'){return Math.round(q)+' шт.'}
+ if(round){const s=q<100?5:10;q=Math.round(q/s)*s;q=Math.max(q,5)}
+ if(q>=1000)return(q/1000).toFixed(1).replace('.',',').replace(',0','')+(u==='ml'?' л':' кг');
+ return q+(u==='ml'?' мл':' г');
+}
+const dayKcal=(a,day)=>Math.round(day.reduce((s,e)=>s+(RID[e.id]?.k||0),0)*({lose:.85,keep:1,gain:1.2}[a.goal]||1)/10)*10;
+const dayMacro=(day,key)=>Math.round(day.reduce((s,e)=>s+(RID[e.id]?.[key]||0),0)*10)/10;
+
+/* ================= UI ================= */
+if(typeof document!=='undefined'){
+const app=document.getElementById('app');
+const KEY='keenwiix-food:v2';
+const S={screen:'intro',i:0,a:{},plan:null,relaxed:false,tab:'plan',open:{},checked:{}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let deferredPrompt=null;
+
+function save(){try{localStorage.setItem(KEY,JSON.stringify({a:S.a,plan:S.plan,relaxed:S.relaxed,checked:S.checked}))}catch(e){}}
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&v.plan&&v.a){S.a=v.a;S.plan=v.plan;S.relaxed=!!v.relaxed;S.checked=v.checked||{};return true}}catch(e){}return false}
+let hasSaved=load();
+
+const offlineEl=document.getElementById('offline');
+function netState(){if(offlineEl)offlineEl.setAttribute('aria-hidden', navigator.onLine ? 'true':'false')}
+window.addEventListener('online',netState);
+window.addEventListener('offline',netState);
+netState();
+
+window.addEventListener('beforeinstallprompt',e=>{
+ e.preventDefault(); deferredPrompt=e;
+ const b=document.querySelector('[data-a="install"]');
+ if(b)b.dataset.show='true';
+});
+
+document.addEventListener('pointermove',e=>{
+ const b=e.target.closest('.btn'); if(!b) return;
+ const r=b.getBoundingClientRect();
+ b.style.setProperty('--mx',(e.clientX-r.left)+'px');
+ b.style.setProperty('--my',(e.clientY-r.top)+'px');
+},{passive:true});
+
+function head(){
+ const pct=S.screen==='quiz'?Math.round((S.i+1)/QUESTIONS.length*100):0;
+ return `<div class="top"><button class="logo" data-a="home" aria-label="keenwiix food — на главную">keenwiix food</button>
+ <div style="display:flex;gap:10px;align-items:center"><span class="tag">бесплатно</span>
+ <button class="theme-btn" data-a="theme" aria-label="Переключить тему">
+   <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+   <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+ </button></div></div>`+(S.screen==='quiz'?`<div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div>`:'');
+}
+function intro(){
+ return `<h1>Рацион на неделю. Без лишнего.</h1>
+ <p class="lead">Ответьте на ${QUESTIONS.length} вопросов и получите меню на 7 дней со списком покупок под ваш магазин, бюджет и вкус.</p>
+ <div class="row"><button class="btn" data-a="start">Начать</button>${hasSaved&&S.plan?'<button class="btn ghost" data-a="resume">Открыть последний план</button>':''}<button class="btn ghost install" data-a="install" data-show="false">Установить приложение</button></div>
+ <p class="fine">Около 2 минут · бесплатно · без регистрации · данные остаются в вашем браузере</p>`;
+}
+function quiz(){
+ const q=QUESTIONS[S.i],v=S.a[q.id];
+ let body='',next=false;
+ if(q.opts){
+  body=q.opts.map(o=>`<button class="opt" data-a="pick" data-v="${o[0]}" aria-pressed="${v===o[0]}">${esc(o[1])}${o[2]?`<small>${esc(o[2])}</small>`:''}</button>`).join('');
+ }else if(q.type==='multi'){
+  const sel=S.a.dislikes||[];
+  body=`<div class="chips">${DISLIKES.map(d=>`<button class="chip" data-a="dis" data-v="${d[0]}" aria-pressed="${sel.includes(d[0])}">${esc(d[1])}</button>`).join('')}</div>`;next=true;
+ }else if(q.type==='count'){
+  const n=S.a.people||1;
+  body=`<div class="stepper"><button data-a="dec" aria-label="Меньше">−</button><output aria-live="polite">${n}</output><button data-a="inc" aria-label="Больше">+</button></div>`;next=true;
+ }else if(q.type==='range'){
+  body=`<div class="big" id="bv">${money(S.a.budget)}</div><input type="range" data-range min="${q.min}" max="${q.max}" step="${q.step}" value="${S.a.budget}" aria-label="Бюджет на неделю"><div class="scale"><span>${money(q.min)}</span><span>${money(q.max)}</span></div>`;next=true;
+ }
+ return `<p class="kicker">Вопрос ${S.i+1} из ${QUESTIONS.length}</p><h2>${esc(q.t)}</h2><p class="sub">${esc(q.sub||'')}</p>${body}
+ <div class="row"><button class="btn ghost" data-a="back">Назад</button>${next?`<button class="btn" data-a="next">${S.i===QUESTIONS.length-1?'Собрать меню':'Далее'}</button>`:''}</div>`;
+}
+function loading(){
+ return `<div class="load" role="status"><h2 style="margin:0 0 16px">Собираем меню…</h2><div class="skel" style="width:60%"></div><div class="skel" style="width:80%"></div><div class="skel" style="width:50%"></div><p class="sub">Подбираем блюда и считаем покупки</p></div>`;
+}
+function macrosLine(r){
+ return `${r.k} ккал · Б ${r.p} · Ж ${r.f} · У ${r.c} · на 1 порцию`;
+}
+function recipeHtml(r,f){
+ const servTxt=r.serv>1?`На ${r.serv} порц. (×${Math.round(f)} на семью):`:`На 1 порцию:`;
+ const ing=Object.keys(r.i).map(k=>{
+  const g=ING[k]; if(!g) return '';
+  return `<li>${esc(g.n)} — ${qty(g.u,r.i[k]*f,true)}</li>`;
+ }).join('');
+ return `<div class="det"><div class="serv">${servTxt}</div><ul>${ing}</ul><div class="serv">КБЖУ: ${macrosLine(r)}</div><p>${esc(r.s)}</p></div>`;
+}
+function result(){
+ const a=S.a,f=factor(a),t=totals(a,S.plan),est=Math.round(t.total);
+ const over=est-a.budget;
+ const fit=over<=0?`Укладываемся в бюджет ${money(a.budget)}.`:`Выше бюджета на ${money(over)}. Увеличьте бюджет, выберите дискаунтер или соберите план заново.`;
+ const tabs=`<div class="tabs" role="tablist"><button class="tab" role="tab" data-a="tab" data-v="plan" aria-selected="${S.tab==='plan'}">Меню</button><button class="tab" role="tab" data-a="tab" data-v="shop" aria-selected="${S.tab==='shop'}">Покупки</button></div>`;
+ let body='';
+ if(S.tab==='plan'){
+  body=S.plan.map((day,d)=>`<section class="day"><div class="dh"><h3>${DAYS[d]}</h3><span>≈ ${dayKcal(a,day)} ккал · Б ${dayMacro(day,'p')} · Ж ${dayMacro(day,'f')} · У ${dayMacro(day,'c')}</span></div>`+day.map(e=>{
+   const r=RID[e.id],key=d+'-'+e.m,open=!!S.open[key];
+   if(!r) return '';
+   return `<div class="meal"><div class="ml"><span>${SLOT[e.m]}</span><button class="lnk" data-a="swap" data-d="${d}" data-m="${e.m}">Заменить</button></div><button class="mn" data-a="toggle" data-k="${key}" aria-expanded="${open}">${esc(r.n)}<small>${r.t} мин · ${open?'скрыть':'рецепт'}</small><span class="macros">${macrosLine(r)}</span></button>${open?recipeHtml(r,f):''}</div>`;
+  }).join('')+`</section>`).join('');
+ }else{
+  const by={};t.items.forEach(i=>(by[i.c]=by[i.c]||[]).push(i));
+  const done=t.items.filter(i=>S.checked[i.k]).length;
+  const groups=Object.keys(by).sort();
+  body=`<p class="fine" id="cnt">Куплено ${done} из ${t.items.length}</p>`+groups.map(g=>`<div class="grp"><h3>${g}</h3>`+by[g].sort((x,y)=>x.n.localeCompare(y.n,'ru')).map(i=>`<label class="it${S.checked[i.k]?' done':''}"><input type="checkbox" data-check="${i.k}"${S.checked[i.k]?' checked':''}><span class="box"><svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg></span><span>${esc(i.n)}</span><b>${qty(i.u,i.q,false)}${i.packs>1?`<small>${i.packs} упак.</small>`:''}</b></label>`).join('')+`</div>`).join('')+
+  `<div class="row"><button class="btn sm" data-a="copy">Скопировать список</button><button class="btn sm ghost" data-a="print">Распечатать</button></div>`;
+ }
+ return `<p class="kicker">Ваш план</p><h2>Меню на 7 дней</h2>
+ <div class="sum"><div class="n" id="sumN" data-target="${est}">≈ ${money(est)}</div><p>на ${a.people} чел. на неделю. ${fit}</p><div class="src">Цены: ${esc(PRICE_META.source)} · ${esc(PRICE_META.updatedAt)}</div></div>
+ ${S.relaxed?'<div class="note">Из-за ограничений в некоторых слотах вариантов мало — часть блюд могла не попасть под фильтры по времени или нелюбимым продуктам.</div>':''}
+ ${tabs}${body}
+ <div class="row"><button class="btn ghost sm" data-a="regen">Собрать заново</button><button class="btn ghost sm" data-a="restart">Пройти тест заново</button></div>
+ <div class="foot">Цены ориентировочные и усреднённые по Пятёрочке, реальная стоимость зависит от региона и даты. Калорийность и КБЖУ приблизительные. Это не медицинская рекомендация — при заболеваниях и особых диетах посоветуйтесь с врачом.</div>`;
+}
+function countUp(){
+ const el=document.getElementById('sumN'); if(!el) return;
+ const target=+el.dataset.target||0;
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches){el.textContent='≈ '+money(target);return}
+ const dur=700, t0=performance.now();
+ function step(t){
+  const p=Math.min(1,(t-t0)/dur), v=Math.round(target*(1-Math.pow(1-p,3)));
+  el.textContent='≈ '+money(v);
+  if(p<1)requestAnimationFrame(step);
+ }
+ requestAnimationFrame(step);
+}
+function render(){
+ let m='';
+ if(S.screen==='intro')m=intro();else if(S.screen==='quiz')m=quiz();else if(S.screen==='load')m=loading();else m=result();
+ app.innerHTML=head()+m;
+ if(S.screen==='result'&&S.tab==='plan')countUp();
+ const b=document.querySelector('[data-a="install"]'); if(b&&deferredPrompt)b.dataset.show='true';
+}
+function go(screen){
+ if(document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+  document.startViewTransition(()=>{S.screen=screen;render();window.scrollTo(0,0)});
+ }else{S.screen=screen;render();window.scrollTo(0,0)}
+}
+function build(){
+ S.screen='load';render();window.scrollTo(0,0);
+ setTimeout(()=>{
+  if(!S.a.seed)S.a.seed=Math.floor(Math.random()*1e9)+1;
+  const g=generate(S.a);S.plan=g.plan;S.relaxed=g.relaxed;S.checked={};S.open={};S.tab='plan';save();go('result');
+ },800);
+}
+function nextQ(){
+ if(S.i<QUESTIONS.length-1){S.i++;prep();go('quiz')}else build();
+}
+function prep(){
+ const q=QUESTIONS[S.i];
+ if(q.id==='people'&&!S.a.people)S.a.people=1;
+ if(q.id==='budget'&&!S.a.budget)S.a.budget=(S.a.people||1)*2500;
+}
+function copyText(){
+ const t=totals(S.a,S.plan),by={};t.items.forEach(i=>(by[i.c]=by[i.c]||[]).push(i));
+ return 'keenwiix food — список покупок\n\n'+Object.keys(by).sort().map(g=>g+'\n'+by[g].map(i=>'— '+i.n+': '+qty(i.u,i.q,false)+(i.packs>1?` (${i.packs} упак.)`:'')).join('\n')).join('\n\n');
+}
+function copy(btn){
+ const text=copyText();
+ const done=()=>{btn.textContent='Скопировано';setTimeout(()=>{btn.textContent='Скопировать список'},1500)};
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,fallback)}else fallback();
+ function fallback(){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done()}catch(e){}ta.remove()}
+}
+app.addEventListener('click',e=>{
+ const t=e.target.closest('[data-a]');if(!t)return;
+ const a=t.dataset.a,v=t.dataset.v;
+  if(a==='home'){go('intro')}
+ else if(a==='start'){S.a={};S.i=0;prep();go('quiz')}
+ else if(a==='resume')go('result')
+ else if(a==='install'){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null;t.dataset.show='false'})}}
+ else if(a==='theme'){toggleTheme()}
+ else if(a==='back'){if(S.i>0){S.i--;go('quiz')}else go('intro')}
+ else if(a==='next')nextQ()
+ else if(a==='pick'){S.a[QUESTIONS[S.i].id]=v;render();setTimeout(nextQ,160)}
+ else if(a==='dis'){const s=S.a.dislikes||(S.a.dislikes=[]);const i=s.indexOf(v);if(i<0)s.push(v);else s.splice(i,1);render()}
+ else if(a==='inc'){S.a.people=Math.min(6,(S.a.people||1)+1);render()}
+ else if(a==='dec'){S.a.people=Math.max(1,(S.a.people||1)-1);render()}
+ else if(a==='tab'){S.tab=v;render()}
+ else if(a==='toggle'){S.open[t.dataset.k]=!S.open[t.dataset.k];render()}
+ else if(a==='swap'){swap(S.a,S.plan,+t.dataset.d,t.dataset.m,Math.random);save();render()}
+ else if(a==='regen'){S.a.seed=Math.floor(Math.random()*1e9)+1;build()}
+ else if(a==='restart'){S.a={};S.i=0;prep();go('quiz')}
+ else if(a==='copy')copy(t)
+ else if(a==='print')window.print();
+});
+app.addEventListener('input',e=>{
+ if(e.target.matches('[data-range]')){S.a.budget=+e.target.value;document.getElementById('bv').textContent=money(S.a.budget)}
+});
+app.addEventListener('change',e=>{
+ const c=e.target.closest('[data-check]');if(!c)return;
+ S.checked[c.dataset.check]=c.checked;c.closest('.it').classList.toggle('done',c.checked);save();
+ const items=totals(S.a,S.plan).items, n=items.length, d=items.filter(i=>S.checked[i.k]).length;
+ const el=document.getElementById('cnt');if(el)el.textContent='Куплено '+d+' из '+n;
+});
+
+(async()=>{
+ await loadPrices();
+ render();
+ if('serviceWorker' in navigator){
+  try{ await navigator.serviceWorker.register('sw.js'); }catch(e){}
+ }
+})();
+
+}
+
+if(typeof module!=='undefined')module.exports={generate,totals,pool,RECIPES,ING,qty,dayKcal,swap,mulberry32,QUESTIONS};
+</script>
+</body>
+</html>
