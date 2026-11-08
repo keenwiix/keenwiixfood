@@ -1,5 +1,5 @@
 'use strict';
-const CACHE = 'keenwiix-food-v1';
+const CACHE = 'keenwiix-food-v2';
 const ASSETS = [
   './', './index.html', './offline.html', './manifest.webmanifest', './prices.json',
   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png'
