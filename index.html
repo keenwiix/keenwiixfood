@@ -345,7 +345,7 @@ const ING_FALLBACK = {
   greens:{n:'Зелень (петрушка/укроп)',u:'g',packSize:100,p:60,c:'Овощи и фрукты'}
 };
 let ING = JSON.parse(JSON.stringify(ING_FALLBACK));
-let PRICE_META = {source:'Супермаркет', updatedAt:'2026-11-05'};
+let PRICE_META = {source:'Супермаркет', updatedAt:'2026-11-08'};
 const STORE_MULT = {disc:0.85, super:1, prem:1.45};
 
 async function loadPrices(){
@@ -357,7 +357,7 @@ async function loadPrices(){
     const next = {};
     for(const k in j.items){
       const it = j.items[k];
-      next[k] = {n:it.n, u:it.u, packSize:it.pack, p:it.price, c:it.c};
+      next[k] = {n:it.n, u:it.u, packSize:it.pack, p:it.price, c:it.cat || it.c};
     }
     ING = next;
     PRICE_META = {source:j.source||'Супермаркет', updatedAt:j.updatedAt||''};
@@ -367,7 +367,6 @@ async function loadPrices(){
 /* ================= RECIPES ================= */
 const R=(id,n,m,t,k,p,f,c,serv,i,s)=>({id,n,m,t,k,p,f,c,serv,i,s});
 const RECIPES=[
- /* ЗАВТРАКИ */
  R('b1','Овсянка на молоке с бананом','b',10,340,12,7,54,1,{oats:60,milk:200,banana:100},'Вскипятите молоко, всыпьте хлопья и варите 5–7 минут, помешивая. Сверху — нарезанный банан.'),
  R('b2','Омлет с помидором','b',10,260,19,17,6,1,{egg:2,milk:50,tomato:80,oil:5},'Взбейте яйца с молоком и щепоткой соли. Обжарьте помидор на масле 2 минуты, залейте смесью и готовьте под крышкой 5 минут.'),
  R('b3','Творог с яблоком и орехами','b',5,300,22,12,28,1,{cottage:150,apple:100,nuts:15},'Яблоко нарежьте кубиками, орехи грубо порубите и смешайте с творогом.'),
@@ -404,7 +403,6 @@ const RECIPES=[
  R('b34','Рисовая каша с тыквой','b',25,330,8,6,58,1,{rice:70,milk:200,carrot:100,honey:10},'Вари рис в молоке с тёртой тыквой/морковью 20 мин, добавь мёд.'),
  R('b35','Омлет с грибами и сыром','b',15,340,20,24,6,1,{egg:3,milk:40,cheese:30,onion:40,oil:8},'Обжарь лук и грибы, залей яйцами, посыпь сыром, под крышку на 5 мин.'),
 
- /* ОБЕДЫ */
  R('l1','Куриный суп с лапшой','l',40,380,28,10,40,2,{chicken:200,potato:300,carrot:100,onion:60,pasta:60},'Варите курицу в 800 мл воды 15 минут. Добавьте картофель, морковь и лук, через 10 минут — макароны и варите ещё 7 минут.'),
  R('l2','Чечевичный суп','l',35,350,18,8,48,2,{lentils:140,carrot:100,onion:80,potato:200,oil:15},'Обжарьте лук и морковь на масле 5 минут. Добавьте чечевицу, картофель и 1 л воды, варите 25 минут.'),
  R('l3','Гречка с курицей и овощами','l',30,480,32,12,48,2,{buckwheat:140,chicken:260,onion:80,carrot:100,oil:15},'Обжарьте кубики курицы с луком и морковью 8 минут. Добавьте гречку и воду 1:2, тушите под крышкой 15 минут.'),
@@ -448,7 +446,6 @@ const RECIPES=[
  R('l41','Пельмени домашние с бульоном','l',60,520,26,18,58,3,{mince:300,egg:1,onion:80,bread:60,potato:200,carrot:80},'Замеси тесто, слепи пельмени, свари в бульоне с овощами.'),
  R('l42','Суп-лапша с индейкой','l',35,380,28,8,40,2,{chicken:250,carrot:100,onion:60,potato:200,greens:15},'Вари индейку 15 мин, добавь овощи, через 10 мин — лапшу/рис, зелень в конце.'),
 
- /* УЖИНЫ */
  R('d1','Курица, запечённая с картофелем','d',50,520,36,18,48,3,{chicken:450,potato:750,onion:120,oil:24},'Нарежьте картофель и лук, смешайте с курицей, маслом и солью. Запекайте при 200 °C около 40 минут.'),
  R('d2','Тушёная капуста с фаршем','d',40,400,26,18,28,3,{cabbage:750,mince:300,onion:120,carrot:120,oil:24},'Обжарьте фарш с луком и морковью 8 минут. Добавьте нашинкованную капусту и тушите под крышкой 25 минут.'),
  R('d3','Хек с рисом и брокколи','d',30,420,32,8,48,3,{hake:450,rice:180,broccoli:360,oil:15},'Рис варите 15 минут. Рыбу и брокколи запекайте при 200 °C 15 минут, сбрызнув маслом.'),
@@ -494,7 +491,6 @@ const RECIPES=[
  R('d43','Тушёная фасоль с курицей','d',40,460,34,14,48,3,{chicken:400,beans:400,tomatoes_c:400,onion:100,oil:20},'Обжарь курицу, добавь фасоль и томаты, туши 20 мин.'),
  R('d44','Плов с грибами (вег)','d',45,440,14,12,68,3,{rice:200,chickpeas:200,carrot:150,onion:100,oil:20},'Обжарь лук, морковь, нут/грибы, добавь рис и воду 1:2, туши 20 мин.'),
 
- /* ПЕРЕКУСЫ */
  R('s1','Яблоко и горсть орехов','s',2,200,5,12,22,1,{apple:150,nuts:20},'Ничего готовить не нужно.'),
  R('s2','Банан','s',1,105,1,0,27,1,{banana:120},'Ничего готовить не нужно.'),
  R('s3','Яйца вкрутую','s',12,150,12,10,0,1,{egg:2},'Варите яйца 9 минут, остудите в холодной воде.'),
@@ -520,7 +516,6 @@ const RECIPES=[
  R('s23','Орехи и курага','s',1,220,5,14,18,1,{nuts:25,raisins:20},'Просто смешай.'),
  R('s24','Протеиновый смузи','s',5,240,14,6,34,1,{kefir:250,banana:100,oats:20},'Взбей всё блендером.'),
 
- /* СЛАДКОЕ / НАПИТКИ */
  R('t1','Какао на молоке','t',5,180,8,8,20,1,{milk:200,cocoa:8,honey:10},'Подогрейте молоко, добавьте какао и мёд, перемешайте.'),
  R('t2','Смузи банан-кефир','t',3,200,8,4,34,1,{banana:100,kefir:200},'Взбейте банан с кефиром блендером.'),
  R('t3','Смузи яблоко-йогурт','t',3,180,8,3,30,1,{apple:100,yogurt:150},'Взбейте яблоко с йогуртом.'),
@@ -539,7 +534,6 @@ const RECIPES=[
  R('t16','Шоколадный смузи','t',3,260,10,8,38,1,{milk:200,banana:100,cocoa:8,honey:10},'Взбей молоко, банан, какао и мёд.'),
  R('t17','Йогурт с ягодами и орехами','t',3,240,14,10,24,1,{greek:150,apple:80,nuts:15},'Смешай йогурт, нарезанное яблоко, орехи.'),
 
- /* ЗАГОТОВКИ / СОУСЫ */
  R('g1','Томатный соус с чесноком','g',15,120,3,6,14,4,{tomatoes_c:400,garlic:10,oil:20,greens:15},'Прогрейте томаты с чесноком на масле 10 минут. Посыпьте зеленью.'),
  R('g2','Соус из йогурта с зеленью','g',5,80,5,4,6,4,{yogurt:200,greens:20,garlic:3},'Смешайте йогурт, зелень и чеснок.'),
  R('g3','Заправка из масла и лимона','g',2,90,0,10,1,4,{oil:60,lemon:20,greens:10},'Смешайте масло, сок лимона и зелень.'),
@@ -638,7 +632,8 @@ function pick(arr,w,rng){
 }
 function sequence(m,a,rng,bias){
  const {list,level}=pool(m,a);
- const sorted=[...list].sort((x,y)=>unitCost(x)-unitCost(y));
+ const f=factor(a);
+ const sorted=[...list].sort((x,y)=>unitCost(x)*f-unitCost(y)*f);
  const step=(a.batch==='yes'&&(m==='l'||m==='d'))?2:1;
  const keep=Math.min(3,sorted.length-1);
  let recent=[];const out=[];
@@ -655,11 +650,11 @@ function sequence(m,a,rng,bias){
 function shopping(plan,f){
  const tot={};
  plan.forEach(day=>day.forEach(e=>{
-const r=RID[e.id]; if(!r) return;
+  const r=RID[e.id]; if(!r) return;
   for(const k in r.i) tot[k]=(tot[k]||0)+r.i[k]*f;
  }));
  return Object.keys(tot).map(k=>{
-  const g=ING[k]; if(!g) return null;
+const g=ING[k]; if(!g) return null;
   const need=tot[k];
   const packSize=g.packSize||1;
   const packs=Math.max(1, Math.ceil(need/packSize - 1e-9));
@@ -690,11 +685,13 @@ function generate(a){
  return{plan:best.plan,relaxed};
 }
 function swap(a,plan,d,m,rng){
- const cur=plan[d].find(e=>e.m===m);
+ const cur=plan[d]?.find(e=>e.m===m);
+ if(!cur) return false;
  const {list}=pool(m,a);
  const c=list.filter(r=>r.id!==cur.id&&!plan[d].some(e=>e.id===r.id));
  if(!c.length)return false;
- cur.id=c[Math.floor(rng()*c.length)].id;return true;
+ cur.id=c[Math.floor(rng()*c.length)].id;
+ return true;
 }
 const money=n=>String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'\u00a0')+'\u00a0₽';
 function qty(u,q,round){
@@ -704,7 +701,10 @@ function qty(u,q,round){
  return q+(u==='ml'?' мл':' г');
 }
 const dayKcal=(a,day)=>Math.round(day.reduce((s,e)=>s+(RID[e.id]?.k||0),0)*({lose:.85,keep:1,gain:1.2}[a.goal]||1)/10)*10;
-const dayMacro=(day,key)=>Math.round(day.reduce((s,e)=>s+(RID[e.id]?.[key]||0),0)*10)/10;
+const dayMacro=(a,day,key)=>{
+  const g={lose:.85,keep:1,gain:1.2}[a.goal]||1;
+  return Math.round(day.reduce((s,e)=>s+(RID[e.id]?.[key]||0),0)*g*10)/10;
+};
 
 /* ================= UI ================= */
 if(typeof document!=='undefined'){
@@ -783,7 +783,7 @@ function result(){
  const tabs=`<div class="tabs" role="tablist"><button class="tab" role="tab" data-a="tab" data-v="plan" aria-selected="${S.tab==='plan'}">Меню</button><button class="tab" role="tab" data-a="tab" data-v="shop" aria-selected="${S.tab==='shop'}">Покупки</button></div>`;
  let body='';
  if(S.tab==='plan'){
-  body=S.plan.map((day,d)=>`<section class="day"><div class="dh"><h3>${DAYS[d]}</h3><span>≈ ${dayKcal(a,day)} ккал · Б ${dayMacro(day,'p')} · Ж ${dayMacro(day,'f')} · У ${dayMacro(day,'c')}</span></div>`+day.map(e=>{
+  body=S.plan.map((day,d)=>`<section class="day"><div class="dh"><h3>${DAYS[d]}</h3><span>≈ ${dayKcal(a,day)} ккал · Б ${dayMacro(a,day,'p')} · Ж ${dayMacro(a,day,'f')} · У ${dayMacro(a,day,'c')}</span></div>`+day.map(e=>{
    const r=RID[e.id],key=d+'-'+e.m,open=!!S.open[key];
    if(!r) return '';
    return `<div class="meal"><div class="ml"><span>${SLOT[e.m]}</span><button class="lnk" data-a="swap" data-d="${d}" data-m="${e.m}">Заменить</button></div><button class="mn" data-a="toggle" data-k="${key}" aria-expanded="${open}">${esc(r.n)}<small>${r.t} мин · ${open?'скрыть':'рецепт'}</small><span class="macros">${macrosLine(r)}</span></button>${open?recipeHtml(r,f):''}</div>`;
@@ -792,12 +792,13 @@ function result(){
   const by={};t.items.forEach(i=>(by[i.c]=by[i.c]||[]).push(i));
   const done=t.items.filter(i=>S.checked[i.k]).length;
   const groups=Object.keys(by).sort();
-  body=`<p class="fine" id="cnt">Куплено ${done} из ${t.items.length}</p>`+groups.map(g=>`<div class="grp"><h3>${g}</h3>`+by[g].sort((x,y)=>x.n.localeCompare(y.n,'ru')).map(i=>`<label class="it${S.checked[i.k]?' done':''}"><input type="checkbox" data-check="${i.k}"${S.checked[i.k]?' checked':''}><span class="box"><svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg></span><span>${esc(i.n)}</span><b>${qty(i.u,i.q,false)}${i.packs>1?`<small>${i.packs} упак.</small>`:''}</b></label>`).join('')+`</div>`).join('')+
+  body=`<p class="fine" id="cnt">Куплено ${done} из ${t.items.length}</p>`+groups.map(g=>`<div class="grp"><h3>${g}</h3>`+by[g].sort((x,y)=>x.n.localeCompare(y.n,'ru')).map(i=>`<label class="it${S.checked[i.k]?' done':''}"><input type="checkbox" data-check="${i.k}"${S.checked[i.k]?' checked':''}><span class="box"><svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg></span><span>${esc(i.n)}</span><b>${i.u==='pcs'?Math.round(i.q)+' шт.':qty(i.u,i.q,false)}${i.packs>1?`<small>${i.packs} упак.</small>`:''}</b></label>`).join('')+`</div>`).join('')+
   `<div class="row"><button class="btn sm" data-a="copy">Скопировать список</button><button class="btn sm ghost" data-a="print">Распечатать</button></div>`;
  }
  return `<p class="kicker">Ваш план</p><h2>Меню на 7 дней</h2>
  <div class="sum"><div class="n" id="sumN" data-target="${est}">≈ ${money(est)}</div><p>на ${a.people} чел. на неделю. ${fit}</p><div class="src">Цены: ${esc(PRICE_META.source)} · ${esc(PRICE_META.updatedAt)}</div></div>
  ${S.relaxed?'<div class="note">Из-за ограничений в некоторых слотах вариантов мало — часть блюд могла не попасть под фильтры по времени или нелюбимым продуктам.</div>':''}
+ ${a.store==='disc'?'<div class="note">В дискаунтере ассортимент уже — дорогие продукты (лосось, киноа, тофу) исключены из подбора.</div>':''}
  ${tabs}${body}
  <div class="row"><button class="btn ghost sm" data-a="regen">Собрать заново</button><button class="btn ghost sm" data-a="restart">Пройти тест заново</button></div>
  <div class="foot">Цены ориентировочные и усреднённые, реальная стоимость зависит от региона и даты. Калорийность и КБЖУ приблизительные. Это не медицинская рекомендация — при заболеваниях и особых диетах посоветуйтесь с врачом.</div>`;
@@ -839,7 +840,11 @@ function nextQ(){
 function prep(){
  const q=QUESTIONS[S.i];
  if(q.id==='people'&&!S.a.people)S.a.people=1;
- if(q.id==='budget'&&!S.a.budget)S.a.budget=(S.a.people||1)*2500;
+ if(q.id==='budget'){
+   const def=(S.a.people||1)*2500;
+   if(!S.a.budget || S.a.budget === S.a._prevBudget) S.a.budget = def;
+   S.a._prevBudget = S.a.budget;
+ }
 }
 function copyText(){
  const t=totals(S.a,S.plan),by={};t.items.forEach(i=>(by[i.c]=by[i.c]||[]).push(i));
@@ -863,8 +868,8 @@ app.addEventListener('click',e=>{
  else if(a==='next')nextQ()
  else if(a==='pick'){S.a[QUESTIONS[S.i].id]=v;render();setTimeout(nextQ,160)}
  else if(a==='dis'){const s=S.a.dislikes||(S.a.dislikes=[]);const i=s.indexOf(v);if(i<0)s.push(v);else s.splice(i,1);render()}
- else if(a==='inc'){S.a.people=Math.min(6,(S.a.people||1)+1);render()}
- else if(a==='dec'){S.a.people=Math.max(1,(S.a.people||1)-1);render()}
+ else if(a==='inc'){S.a._prevBudget=S.a.budget;S.a.people=Math.min(6,(S.a.people||1)+1);render()}
+ else if(a==='dec'){S.a._prevBudget=S.a.budget;S.a.people=Math.max(1,(S.a.people||1)-1);render()}
  else if(a==='tab'){S.tab=v;render()}
  else if(a==='toggle'){S.open[t.dataset.k]=!S.open[t.dataset.k];render()}
  else if(a==='swap'){swap(S.a,S.plan,+t.dataset.d,t.dataset.m,Math.random);save();render()}
