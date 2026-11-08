@@ -4,10 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>keenwiix food — рацион на неделю</title>
-<meta name="description" content="Ответьте на несколько вопросов и получите меню на 7 дней со списком покупок под ваш магазин, бюджет и вкус. Бесплатно.">
+<meta name="description" content="Ответьте на несколько вопросов и получите меню на 7 дней со списком покупок под ваш магазин, бюджет и вкус.">
 <meta name="theme-color" content="#fffafb">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="keenwiix food">
@@ -21,7 +20,6 @@
   --line:#f0e6e8; 
   --soft:#fdf5f6;
   
-  /* Нежно-розовые акценты */
   --accent1:#ff9a9e; 
   --accent2:#fecfef; 
   --accent-text:#121212; 
@@ -71,7 +69,7 @@ button{font:inherit;color:inherit;background:none;border:0}
 .top{display:flex;justify-content:space-between;align-items:center;padding:24px 0;gap:12px}
 .logo{font-weight:900;letter-spacing:-.06em;font-size:24px;cursor:pointer;padding:0;transition:opacity .2s}
 .logo:hover{opacity:0.7}
-/* Кнопка темы (круглая, не крутится) */
+/* Кнопка темы */
 .theme-btn{
   width:44px;height:44px;border-radius:50%;border:2px solid var(--line);background:var(--soft);cursor:pointer;
   display:grid;place-items:center;transition:border-color .2s var(--ease), background .2s;
@@ -108,8 +106,6 @@ h2{font-size:clamp(30px,8vw,44px);letter-spacing:-.04em;line-height:1.05;margin:
 .btn.ghost:hover{box-shadow:inset 0 0 0 2px var(--accent1),0 6px 12px -6px rgba(0,0,0,.1); color:var(--accent1)}
 .btn.ghost:active{transform:translateY(2px)}
 .btn.sm{padding:12px 24px;font-size:15px}
-.install{display:none}
-.install[data-show=true]{display:inline-block;animation:pop .3s var(--ease-out)}
 
 .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:28px}
 .fine{font-size:13px;color:var(--mut);margin-top:20px}
@@ -254,10 +250,6 @@ input[type=range]{
 .it.done b{color:var(--mut)}
 
 .foot{margin-top:56px;font-size:13px;color:var(--mut);border-top:1px solid var(--line);padding-top:20px;line-height:1.6}
-
-@media (min-width:720px){
- .cols{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
-}
 </style>
 </head>
 <body>
@@ -290,31 +282,24 @@ const ING_FALLBACK = {
   rice:{n:'Рис',u:'g',packSize:900,p:115,c:'Крупы и бакалея'},
   buckwheat:{n:'Гречка',u:'g',packSize:900,p:120,c:'Крупы и бакалея'},
   pasta:{n:'Макароны',u:'g',packSize:450,p:70,c:'Крупы и бакалея'},
-  bulgur:{n:'Булгур',u:'g',packSize:800,p:130,c:'Крупы и бакалея'},
-  quinoa:{n:'Киноа',u:'g',packSize:400,p:260,c:'Крупы и бакалея'},
   lentils:{n:'Чечевица',u:'g',packSize:800,p:120,c:'Крупы и бакалея'},
   chickpeas:{n:'Нут',u:'g',packSize:400,p:85,c:'Крупы и бакалея'},
   beans:{n:'Фасоль',u:'g',packSize:400,p:80,c:'Крупы и бакалея'},
-  tomatoes_c:{n:'Томаты резаные',u:'g',packSize:400,p:95,c:'Крупы и бакалея'},
   tuna:{n:'Тунец',u:'g',packSize:185,p:130,c:'Крупы и бакалея'},
   oil:{n:'Масло растительное',u:'ml',packSize:1000,p:180,c:'Крупы и бакалея'},
   nuts:{n:'Орехи',u:'g',packSize:200,p:260,c:'Крупы и бакалея'},
   honey:{n:'Мёд',u:'g',packSize:500,p:350,c:'Крупы и бакалея'},
-  tofu:{n:'Тофу',u:'g',packSize:400,p:350,c:'Крупы и бакалея'},
   bread:{n:'Хлеб',u:'g',packSize:400,p:60,c:'Хлеб'},
   egg:{n:'Яйца',u:'pcs',packSize:10,p:120,c:'Молочные продукты и яйца'},
   milk:{n:'Молоко',u:'ml',packSize:1000,p:80,c:'Молочные продукты и яйца'},
   yogurt:{n:'Йогурт нат.',u:'g',packSize:400,p:90,c:'Молочные продукты и яйца'},
   greek:{n:'Йогурт греч.',u:'g',packSize:300,p:140,c:'Молочные продукты и яйца'},
-  kefir:{n:'Кефир',u:'ml',packSize:900,p:80,c:'Молочные продукты и яйца'},
   cottage:{n:'Творог 5%',u:'g',packSize:300,p:150,c:'Молочные продукты и яйца'},
   cheese:{n:'Сыр',u:'g',packSize:200,p:220,c:'Молочные продукты и яйца'},
   chicken:{n:'Куриное филе',u:'g',packSize:700,p:320,c:'Мясо и рыба'},
   turkey:{n:'Индейка',u:'g',packSize:700,p:380,c:'Мясо и рыба'},
-  pork:{n:'Свинина',u:'g',packSize:600,p:340,c:'Мясо и рыба'},
   mince:{n:'Фарш',u:'g',packSize:500,p:380,c:'Мясо и рыба'},
   hake:{n:'Хек',u:'g',packSize:600,p:320,c:'Мясо и рыба'},
-  salmon:{n:'Лосось',u:'g',packSize:500,p:890,c:'Мясо и рыба'},
   potato:{n:'Картофель',u:'g',packSize:1000,p:40,c:'Овощи и фрукты'},
   carrot:{n:'Морковь',u:'g',packSize:1000,p:40,c:'Овощи и фрукты'},
   onion:{n:'Лук',u:'g',packSize:1000,p:35,c:'Овощи и фрукты'},
@@ -322,9 +307,7 @@ const ING_FALLBACK = {
   cucumber:{n:'Огурцы',u:'g',packSize:1000,p:130,c:'Овощи и фрукты'},
   cabbage:{n:'Капуста',u:'g',packSize:1000,p:35,c:'Овощи и фрукты'},
   pepper:{n:'Перец',u:'g',packSize:1000,p:190,c:'Овощи и фрукты'},
-  zucchini:{n:'Кабачки',u:'g',packSize:1000,p:110,c:'Овощи и фрукты'},
   broccoli:{n:'Брокколи',u:'g',packSize:400,p:120,c:'Овощи и фрукты'},
-  garlic:{n:'Чеснок',u:'g',packSize:200,p:70,c:'Овощи и фрукты'},
   banana:{n:'Бананы',u:'g',packSize:1000,p:110,c:'Овощи и фрукты'},
   apple:{n:'Яблоки',u:'g',packSize:1000,p:110,c:'Овощи и фрукты'},
   greens:{n:'Зелень',u:'g',packSize:100,p:60,c:'Овощи и фрукты'}
@@ -333,7 +316,6 @@ let ING = ING_FALLBACK;
 let PRICE_META = {source:'Супермаркет', updatedAt:'2026-11-08'};
 const STORE_MULT = {disc:0.85, super:1, prem:1.45};
 
-/* ================= RECIPES ================= */
 const R=(id,n,m,t,k,p,f,c,serv,i,s)=>({id,n,m,t,k,p,f,c,serv,i,s});
 const RECIPES=[
  R('b1','Овсянка с бананом','b',10,340,12,7,54,1,{oats:60,milk:200,banana:100},'Сварите хлопья. Добавьте банан.'),
@@ -343,25 +325,19 @@ const RECIPES=[
  R('b6','Йогурт с бананом','b',5,310,14,6,50,1,{yogurt:150,oats:30,banana:80},'Смешайте йогурт, овсянку и банан.'),
  R('b10','Сырники','b',20,380,24,12,44,2,{cottage:300,egg:1,oats:40,oil:5},'Сформируйте и обжарьте.'),
  R('b12','Омлет с сыром','b',10,320,22,24,3,1,{egg:3,milk:30,cheese:30,oil:5},'Взбейте и обжарьте.'),
- R('b13','Греческий йогурт с мёдом','b',5,280,18,8,32,1,{greek:200,honey:15,apple:100},'Смешайте ингредиенты.'),
- R('b15','Овсянка с какао','b',10,360,13,8,58,1,{oats:60,milk:200,banana:80,cocoa:5},'Сварите, добавьте какао.'),
  R('b16','Яичница с помидорами','b',10,290,17,20,8,1,{egg:3,tomato:120,greens:15,oil:8},'Обжарьте помидоры, залейте яйцами.'),
  R('b17','Тост с яйцом','b',15,350,18,20,26,1,{bread:80,egg:2,oil:5,greens:10},'Подсушите хлеб, сверху яйца.'),
  R('b23','Сэндвич с тунцом','b',10,360,24,12,38,1,{bread:80,tuna:80,cucumber:50,greens:10},'Смешайте тунец и огурец, на хлеб.'),
- R('b27','Творог с бананом','b',5,320,22,8,40,1,{cottage:150,banana:100},'Смешайте творог и банан.'),
- R('b31','Шакшука','b',20,340,18,20,18,1,{egg:2,tomatoes_c:200,pepper:100,onion:50,oil:10,garlic:5},'Потушите овощи, вбейте яйца.'),
+ R('b31','Шакшука','b',20,340,18,20,18,1,{egg:2,tomato:200,pepper:100,onion:50,oil:10,garlic:5},'Потушите овощи, вбейте яйца.'),
  
  R('l1','Куриный суп','l',40,380,28,10,40,2,{chicken:200,potato:300,carrot:100,onion:60,pasta:60},'Сварите бульон, добавьте овощи и лапшу.'),
  R('l2','Суп с чечевицей','l',35,350,18,8,48,2,{lentils:140,carrot:100,onion:80,potato:200,oil:15},'Обжарьте лук, добавьте чечевицу и картофель, варите.'),
  R('l3','Гречка с курицей','l',30,480,32,12,48,2,{buckwheat:140,chicken:260,onion:80,carrot:100,oil:15},'Потушите курицу с овощами, смешайте с гречкой.'),
  R('l4','Рис с тунцом','l',20,430,24,10,52,2,{rice:140,tuna:185,cucumber:160,tomato:160},'Отварите рис, смешайте с тунцом и овощами.'),
- R('l5','Салат с нутом','l',10,350,14,14,40,2,{chickpeas:400,cucumber:200,tomato:200,onion:40,oil:20},'Нарежьте и смешайте.'),
  R('l12','Салат Цезарь','l',20,450,32,20,28,2,{chicken:200,bread:80,cheese:30,cucumber:100,oil:15,greens:20},'Обжарьте курицу, смешайте.'),
  R('l14','Плов с курицей','l',50,520,30,14,64,3,{rice:200,chicken:300,carrot:150,onion:100,oil:20,garlic:10},'Классический плов.'),
- R('l16','Киноа с тофу','l',25,420,20,14,50,2,{quinoa:120,tofu:200,pepper:120,broccoli:150,oil:15},'Отварите киноа, обжарьте тофу и овощи.'),
  R('l19','Салат с тунцом','l',10,380,26,12,38,2,{tuna:185,beans:400,cucumber:150,tomato:150,onion:40,oil:15},'Смешайте всё.'),
  R('l25','Салат с курицей','l',15,380,30,14,28,2,{chicken:200,apple:150,cucumber:100,greens:20,oil:12},'Обжарьте курицу, смешайте.'),
- R('l27','Паста с лососем','l',25,520,30,20,48,2,{pasta:180,salmon:200,broccoli:150,oil:12},'Отварите пасту, обжарьте рыбу.'),
  R('l30','Греческий салат','l',10,380,16,24,24,2,{cucumber:200,tomato:200,cheese:60,onion:40,oil:20},'Нарежьте и смешайте.'),
  R('l31','Гречка с фаршем','l',30,520,32,18,52,2,{buckwheat:140,mince:250,onion:80,carrot:100,oil:15},'Потушите фарш, смешайте с гречкой.'),
 
@@ -369,35 +345,27 @@ const RECIPES=[
  R('d2','Капуста с фаршем','d',40,400,26,18,28,3,{cabbage:750,mince:300,onion:120,carrot:120,oil:24},'Потушите капусту с фаршем.'),
  R('d3','Хек с рисом','d',30,420,32,8,48,3,{hake:450,rice:180,broccoli:360,oil:15},'Запеките рыбу, отварите рис.'),
  R('d5','Котлеты с гречкой','d',40,560,34,22,52,3,{mince:360,egg:1,onion:90,buckwheat:180,oil:24},'Обжарьте котлеты, отварите гречку.'),
- R('d6','Тофу с рисом','d',30,480,22,16,58,3,{tofu:390,rice:180,pepper:240,broccoli:300,carrot:120,oil:24},'Обжарьте тофу, отварите рис.'),
  R('d8','Паста с курицей','d',30,540,36,16,60,3,{pasta:240,chicken:360,broccoli:300,oil:24},'Отварите пасту, обжарьте курицу.'),
  R('d10','Куриные котлеты на пару','d',35,380,34,12,28,3,{chicken:400,egg:1,onion:80,broccoli:300,carrot:120},'Готовьте на пару.'),
- R('d11','Тушёная курица','d',40,420,34,14,36,3,{chicken:450,zucchini:300,pepper:200,tomatoes_c:400,onion:100,oil:20},'Потушите всё вместе в казане или глубокой сковороде 20 минут.'),
+ R('d11','Тушёная курица','d',40,420,34,14,36,3,{chicken:450,pepper:200,tomato:400,onion:100,oil:20},'Потушите всё вместе в казане или глубокой сковороде 20 минут.'),
  R('d12','Рыбные котлеты','d',40,460,32,16,44,3,{hake:450,egg:1,onion:80,bread:80,potato:600,oil:24},'Сформируйте котлеты из рыбы, обжарьте. Подавайте с картофелем.'),
  R('d13','Плов с индейкой','d',50,500,34,12,64,3,{rice:220,chicken:400,carrot:150,onion:100,oil:24,garlic:10},'Классический плов с индейкой.'),
- R('d14','Киноа с курицей','d',30,460,34,12,48,3,{quinoa:160,chicken:400,broccoli:200,pepper:150,oil:20},'Отварите киноа, обжарьте курицу с овощами.'),
- R('d15','Запечённая рыба','d',35,380,34,12,32,3,{hake:500,zucchini:300,pepper:200,onion:100,oil:20},'Запеките рыбу и овощи в духовке.'),
- R('d16','Курица в томатном соусе','d',35,480,36,12,56,3,{chicken:450,tomatoes_c:400,rice:180,onion:100,oil:20},'Потушите курицу в томатах, подавайте с рисом.'),
+ R('d15','Запечённая рыба','d',35,380,34,12,32,3,{hake:500,pepper:200,onion:100,oil:20},'Запеките рыбу и овощи в духовке.'),
+ R('d16','Курица в томатном соусе','d',35,480,36,12,56,3,{chicken:450,tomato:400,rice:180,onion:100,oil:20},'Потушите курицу в томатах, подавайте с рисом.'),
  R('d18','Куриные бёдра с гречкой','d',45,540,36,20,48,3,{chicken:500,buckwheat:180,onion:100,carrot:100,oil:20},'Обжарьте курицу, отварите гречку.'),
- R('d20','Тофу с брокколи','d',25,440,22,14,54,3,{tofu:390,broccoli:300,rice:180,oil:20},'Обжарьте тофу с брокколи, подавайте с рисом.'),
  R('d23','Индейка с рисом','d',35,480,36,12,52,3,{chicken:450,rice:180,broccoli:200,pepper:150,oil:20},'Потушите индейку, отварите рис.'),
  R('d28','Рыба с брокколи','d',35,380,34,14,24,3,{hake:500,broccoli:400,cheese:60,oil:15},'Запеките рыбу с брокколи под сыром.'),
- R('d29','Котлеты из индейки','d',40,440,34,16,36,3,{chicken:450,egg:1,onion:100,zucchini:300,oil:20},'Котлеты на пару, овощи гарниром.'),
- R('d31','Паста с лососем','d',25,560,34,22,52,3,{pasta:240,salmon:300,greens:40,oil:20},'Отварите пасту, смешайте с обжаренным лососем.'),
+ R('d29','Котлеты из индейки','d',40,440,34,16,36,3,{chicken:450,egg:1,onion:100,oil:20},'Котлеты на пару, овощи гарниром.'),
  R('d33','Куриные котлеты','d',40,500,34,16,52,3,{chicken:450,egg:1,onion:100,rice:180,oil:20},'Котлеты и гарнир из риса.'),
  R('d34','Запечённая индейка','d',50,500,36,16,48,3,{chicken:450,potato:700,onion:100,oil:20},'Индейка с картофелем в духовке.'),
- R('d35','Рагу с тофу','d',35,380,22,14,40,3,{tofu:390,zucchini:300,pepper:200,tomatoes_c:400,onion:100,oil:20},'Овощное рагу с тофу.'),
  R('d36','Курица терияки','d',35,540,36,16,60,3,{chicken:450,rice:180,pepper:150,onion:100,oil:20},'Курица в соусе терияки с рисом.'),
  R('d38','Индейка с гречкой','d',40,500,36,14,50,3,{chicken:450,buckwheat:180,onion:80,oil:20},'Индейка с гречкой.'),
- R('d39','Карри с нутом','d',35,400,16,12,54,3,{chickpeas:400,tomatoes_c:400,onion:100,pepper:150,oil:20},'Овощное карри с нутом.'),
- R('d41','Лосось с рисом','d',30,560,34,24,50,3,{salmon:350,rice:180,broccoli:300,oil:15},'Запеките лосось, отварите рис и брокколи.'),
- R('d43','Фасоль с курицей','d',40,460,34,14,48,3,{chicken:400,beans:400,tomatoes_c:400,onion:100,oil:20},'Потушите курицу с фасолью и томатами.'),
+ R('d43','Фасоль с курицей','d',40,460,34,14,48,3,{chicken:400,beans:400,tomato:400,onion:100,oil:20},'Потушите курицу с фасолью и томатами.'),
 
  R('s1','Яблоко и орехи','s',2,200,5,12,22,1,{apple:150,nuts:20},'Просто перекус.'),
  R('s2','Банан','s',1,105,1,0,27,1,{banana:120},'Просто перекус.'),
  R('s3','Яйца вкрутую','s',12,150,12,10,0,1,{egg:2},'Отварите яйца.'),
  R('s6','Творог с мёдом','s',2,180,18,5,16,1,{cottage:150,honey:15},'Смешайте.'),
- R('s7','Йогурт с семечками','s',2,180,14,8,12,1,{greek:150,seeds:10},'Смешайте.'),
  R('s10','Бутерброд с сыром','s',3,220,10,12,18,1,{bread:50,cheese:30},'Сделайте бутерброд.'),
  R('s11','Банан с орехами','s',2,220,4,10,30,1,{banana:120,nuts:15},'Смешайте.'),
  R('s12','Творог с огурцом','s',3,160,18,6,6,1,{cottage:150,cucumber:80,greens:10},'Нарежьте и смешайте.'),
@@ -466,19 +434,13 @@ function disSet(a){
 }
 
 function pool(m,a){
- // Базовый пул по категории, диете и ПРАВИЛУ БЕЛОК > ЖИР
  let base = RECIPES.filter(r => r.m===m && dietOk(r,a) && r.p > r.f);
- 
- // В дискаунтере убираем дорогие продукты
  if(a.store==='disc'){
    const expensive=['salmon','quinoa','tofu','greek','turkey'];
    base = base.filter(r => !Object.keys(r.i).some(k=>expensive.includes(k)));
  }
- 
  const dis = disSet(a);
- // Сначала пытаемся найти блюда, где нет НИ ОДНОГО disliked ингредиента
  let list = base.filter(r => !has(r, dis));
- 
  return {list, level: list.length ? 0 : 1};
 }
 
@@ -502,11 +464,9 @@ function pick(arr,w,rng){
 function sequence(m,a,rng,bias){
  const {list} = pool(m,a);
  if(!list.length) return {out: Array(7).fill(null), level: 1};
- 
  const f=factor(a);
  const sorted=[...list].sort((x,y)=>unitCost(x)*f-unitCost(y)*f);
  let recent=[]; const out=[];
- 
  for(let d=0;d<7;d++){
   let c=sorted.filter(r=>!recent.includes(r.id));
   if(!c.length)c=sorted;
@@ -555,7 +515,6 @@ function generate(a){
     seqs[m]=s.out;
     if(s.level>0) rel=true;
   });
-  
   const plan=[];
   for(let d=0;d<7;d++){
     plan.push(slots.map(m=>{
@@ -563,7 +522,6 @@ function generate(a){
       return id ? {m, id} : null;
     }).filter(Boolean));
   }
-  
   const t=totals(a,plan);
   if(!best||t.total<best.total){
     best={plan,total:t.total};
@@ -605,7 +563,7 @@ const dayMacro=(a,day,key)=>{
 /* ================= UI ================= */
 if(typeof document!=='undefined'){
 const app=document.getElementById('app');
-const KEY='keenwiix-food:v4'; // версия обновлена
+const KEY='keenwiix-food:v5'; 
 const S={screen:'intro',i:0,a:{},plan:null,relaxed:false,tab:'plan',open:{},checked:{}};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let deferredPrompt=null;
@@ -616,8 +574,6 @@ let hasSaved=load();
 
 window.addEventListener('beforeinstallprompt',e=>{
  e.preventDefault(); deferredPrompt=e;
- const b=document.querySelector('[data-a="install"]');
- if(b)b.dataset.show='true';
 });
 
 function head(){
@@ -633,7 +589,7 @@ function head(){
 function intro(){
  return `<h1>Рацион на неделю. Без лишнего.</h1>
  <p class="lead">Ответьте на несколько вопросов и получите меню на 7 дней со списком покупок.</p>
- <div class="row"><button class="btn" data-a="start">Начать</button>${hasSaved&&S.plan?'<button class="btn ghost" data-a="resume">Последний план</button>':''}<button class="btn ghost install" data-a="install" data-show="false">Установить приложение</button></div>
+ <div class="row"><button class="btn" data-a="start">Начать</button>${hasSaved&&S.plan?'<button class="btn ghost" data-a="resume">Последний план</button>':''}<button class="btn ghost" data-a="install">Установить приложение</button></div>
  <p class="fine">Около 2 минут · бесплатно · без регистрации · данные остаются в вашем браузере</p>`;
 }
 
@@ -722,7 +678,6 @@ function render(){
  if(S.screen==='intro')m=intro();else if(S.screen==='quiz')m=quiz();else if(S.screen==='load')m=loading();else m=result();
  app.innerHTML=head()+m;
  if(S.screen==='result'&&S.tab==='plan')countUp();
- const b=document.querySelector('[data-a="install"]'); if(b&&deferredPrompt)b.dataset.show='true';
 }
 
 function go(screen){
@@ -753,7 +708,7 @@ function prep(){
 }
 
 function copyText(){
-const t=totals(S.a,S.plan),by={};t.items.forEach(i=>(by[i.c]=by[i.c]||[]).push(i));
+ const t=totals(S.a,S.plan),by={};t.items.forEach(i=>(by[i.c]=by[i.c]||[]).push(i));
  return 'keenwiix food — список покупок\n\n'+Object.keys(by).sort().map(g=>g+'\n'+by[g].map(i=>'— '+i.n+': '+qty(i.u,i.q,false)+(i.packs>1?` (${i.packs} упак.)`:'')).join('\n')).join('\n\n');
 }
 
@@ -770,7 +725,14 @@ app.addEventListener('click',e=>{
   if(a==='home'){go('intro')}
  else if(a==='start'){S.a={};S.i=0;prep();go('quiz')}
  else if(a==='resume')go('result')
- else if(a==='install'){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null;t.dataset.show='false'})}}
+ else if(a==='install'){
+   if(deferredPrompt){
+     deferredPrompt.prompt();
+     deferredPrompt.userChoice.then(()=>{deferredPrompt=null;});
+   } else {
+     alert('В вашем браузере установка недоступна, либо приложение уже установлено!');
+   }
+ }
  else if(a==='theme'){toggleTheme()}
  else if(a==='back'){if(S.i>0){S.i--;go('quiz')}else go('intro')}
  else if(a==='next')nextQ()
