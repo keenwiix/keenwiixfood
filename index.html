@@ -14,132 +14,244 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
 :root{
-  --bg:#fff; --fg:#0a0a0a; --mut:#707070; --line:#e4e4e4; --soft:#f6f6f6;
+  --bg:#fff; --fg:#0a0a0a; --mut:#707070; --line:#e8e8e8; --soft:#f6f6f6;
+  --accent1:#ff6b35; --accent2:#ff2e63; --accent3:#ffb800;
+  --r-card:28px; --r-btn:999px; --r-input:24px; --r-chip:999px;
   --ease:cubic-bezier(.2,.7,.2,1);
   --ease-out:cubic-bezier(.16,1,.3,1);
-  --dur:.24s;
+  --shadow-btn:0 6px 0 rgba(0,0,0,.15), 0 12px 24px -6px rgba(255,46,99,.45);
+  --shadow-card:0 24px 48px -24px rgba(0,0,0,.3);
 }
 :root[data-theme="dark"]{
-  --bg:#0a0a0a; --fg:#f4f4f4; --mut:#9a9a9a; --line:#262626; --soft:#161616;
+  --bg:#0b0b0f; --fg:#f4f4f4; --mut:#9a9a9a; --line:#26262e; --soft:#16161c;
+  --shadow-btn:0 6px 0 rgba(0,0,0,.6), 0 12px 24px -6px rgba(255,46,99,.35);
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 -apple-system,"Inter","Segoe UI",Roboto,system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);transition:background .3s var(--ease),color .3s var(--ease)}
+body{
+  margin:0;color:var(--fg);
+  font:16px/1.5 -apple-system,"Inter","Segoe UI",Roboto,system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  transition:background .3s var(--ease),color .3s var(--ease);
+  background:
+    radial-gradient(900px 600px at 15% -10%, color-mix(in srgb, var(--accent1) 15%, transparent), transparent 60%),
+    radial-gradient(800px 500px at 100% 0%, color-mix(in srgb, var(--accent2) 12%, transparent), transparent 55%),
+    var(--bg);
+  background-attachment: fixed;
+}
 button{font:inherit;color:inherit;background:none;border:0}
-:focus-visible{outline:2px solid var(--fg);outline-offset:3px;border-radius:2px}
-.wrap{max-width:680px;margin:0 auto;padding:0 20px 96px}
+:focus-visible{outline:3px solid var(--accent2);outline-offset:3px;border-radius:8px}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px 96px}
 @view-transition{navigation:auto}
 ::view-transition-old(root){animation:vtOut .2s var(--ease) both}
 ::view-transition-new(root){animation:vtIn .28s var(--ease-out) both}
 @keyframes vtOut{to{opacity:0;transform:translateY(-4px)}}
-@keyframes vtIn{from{opacity:0;transform:translateY(6px)}}
-.top{display:flex;justify-content:space-between;align-items:center;padding:20px 0;gap:12px}
-.logo{font-weight:700;letter-spacing:-.04em;font-size:22px;cursor:pointer;padding:0}
-.logo:hover{opacity:.7;transition:opacity var(--dur) var(--ease)}
-.tag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--fg);padding:3px 8px}
+@keyframes vtIn{from{opacity:0;transform:translateY(8px)}}
+
+.top{display:flex;justify-content:space-between;align-items:center;padding:24px 0;gap:12px}
+.logo{font-weight:900;letter-spacing:-.06em;font-size:24px;cursor:pointer;padding:0;transition:transform .2s var(--ease)}
+.logo:hover{transform:scale(1.05)}
+.tag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;border:2px solid var(--fg);padding:4px 12px;border-radius:999px;font-weight:800}
 .theme-btn{
-  width:36px;height:36px;border:1px solid var(--line);background:var(--bg);cursor:pointer;
-  display:grid;place-items:center;transition:transform .2s var(--ease),border-color .2s var(--ease);
+  width:44px;height:44px;border-radius:50%;border:2px solid var(--line);background:var(--bg);cursor:pointer;
+  display:grid;place-items:center;transition:transform .3s var(--ease),border-color .2s var(--ease);
 }
-.theme-btn:hover{border-color:var(--fg);transform:rotate(-15deg)}
-.theme-btn svg{width:18px;height:18px;stroke:var(--fg);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.theme-btn:hover{border-color:var(--accent2);transform:rotate(-20deg) scale(1.05)}
+.theme-btn svg{width:20px;height:20px;stroke:var(--fg);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .theme-btn .sun{display:none}
 .theme-btn .moon{display:block}
 :root[data-theme="dark"] .theme-btn .sun{display:block}
 :root[data-theme="dark"] .theme-btn .moon{display:none}
-.bar{height:2px;background:var(--line);margin-bottom:8px;overflow:hidden}
-.bar i{display:block;height:100%;background:var(--fg);transition:width .5s var(--ease-out);position:relative}
-.bar i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.8),transparent);animation:shimmer 1.6s infinite}
-@keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
-h1{font-size:clamp(40px,11vw,68px);line-height:1;letter-spacing:-.045em;margin:56px 0 18px;font-weight:700;animation:heroIn .7s var(--ease-out) both}
-@keyframes heroIn{from{opacity:0;transform:translateY(14px) scale(.98);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
-h2{font-size:clamp(28px,7vw,40px);letter-spacing:-.035em;line-height:1.08;margin:36px 0 10px;font-weight:700}
-.lead{font-size:18px;color:var(--mut);margin:0 0 32px;max-width:30em;animation:heroIn .7s var(--ease-out) .06s both}
-.sub{color:var(--mut);margin:0 0 24px}
-.kicker{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
-.btn{display:inline-block;background:var(--fg);color:var(--bg);border:1px solid var(--fg);padding:15px 28px;cursor:pointer;font-weight:600;letter-spacing:-.01em;position:relative;overflow:hidden;isolation:isolate;transition:background var(--dur) var(--ease),transform .15s var(--ease),box-shadow var(--dur) var(--ease)}
-.btn:hover{background:#262626;box-shadow:0 6px 20px -8px rgba(0,0,0,.35);transform:translateY(-1px)}
-:root[data-theme="dark"] .btn:hover{background:#e8e8e8;color:#0a0a0a}
-.btn:active{transform:scale(.97) translateY(0)}
-.btn::after{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.22),transparent 60%);opacity:0;transition:opacity .3s var(--ease)}
-:root[data-theme="dark"] .btn::after{background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(0,0,0,.15),transparent 60%)}
-.btn:hover::after{opacity:1}
-.btn.ghost{background:var(--bg);color:var(--fg)}
-.btn.ghost:hover{background:var(--soft)}
-.btn.sm{padding:9px 16px;font-size:14px}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:24px}
-.fine{font-size:13px;color:var(--mut);margin-top:16px}
-.opt{display:block;width:100%;text-align:left;padding:16px 18px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer;margin-bottom:8px;font-weight:500;transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease),color var(--dur) var(--ease),transform .18s var(--ease-out);animation:fadeUp .4s var(--ease-out) both}
-.opt:nth-child(1){animation-delay:.02s}.opt:nth-child(2){animation-delay:.06s}.opt:nth-child(3){animation-delay:.10s}.opt:nth-child(4){animation-delay:.14s}.opt:nth-child(5){animation-delay:.18s}
-.opt:hover{border-color:var(--fg);transform:translateX(2px)}
-.opt small{display:block;color:var(--mut);font-size:13px;font-weight:400}
-.opt[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg);transform:scale(1.01)}
-.opt[aria-pressed=true] small{color:var(--mut)}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{padding:9px 16px;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--fg);cursor:pointer;transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease),color var(--dur) var(--ease),transform .15s var(--ease)}
-.chip:hover{border-color:var(--fg);transform:translateY(-1px)}
-.chip[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg);animation:pop .25s var(--ease-out)}
-@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
-.stepper{display:flex;align-items:center;gap:24px;margin:24px 0}
-.stepper button{width:56px;height:56px;border:1px solid var(--fg);background:var(--bg);color:var(--fg);font-size:26px;cursor:pointer;transition:background var(--dur) var(--ease),transform .15s var(--ease)}
-.stepper button:hover{background:var(--soft);transform:scale(1.04)}
-.stepper button:active{transform:scale(.94)}
-.stepper output{font-size:56px;font-weight:700;letter-spacing:-.04em;min-width:64px;text-align:center;font-variant-numeric:tabular-nums;animation:numIn .3s var(--ease-out)}
+
+.bar{height:12px;border-radius:999px;background:var(--soft);margin-bottom:24px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,.05)}
+.bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent3));background-size:200% 100%;transition:width .5s var(--ease-out);animation:shimmer 2s linear infinite}
+@keyframes shimmer{0%{background-position:0% 0}100%{background-position:200% 0}}
+
+h1{font-size:clamp(42px,12vw,76px);line-height:.98;letter-spacing:-.05em;margin:48px 0 20px;font-weight:900;animation:heroIn .7s var(--ease-out) both}
+@keyframes heroIn{from{opacity:0;transform:translateY(16px) scale(.98);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+h2{font-size:clamp(30px,8vw,44px);letter-spacing:-.04em;line-height:1.05;margin:32px 0 12px;font-weight:900}
+.lead{font-size:19px;color:var(--mut);margin:0 0 32px;max-width:30em;animation:heroIn .7s var(--ease-out) .06s both}
+.sub{color:var(--mut);margin:0 0 28px;font-size:17px}
+.kicker{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);font-weight:800;margin-bottom:8px}
+
+.btn{
+  display:inline-block;border-radius:var(--r-btn);border:0;padding:18px 34px;cursor:pointer;
+  font-weight:800;font-size:17px;letter-spacing:-.01em;color:#fff;
+  background:linear-gradient(135deg,var(--accent1),var(--accent2));
+  box-shadow:var(--shadow-btn);position:relative;
+  transition:transform .12s var(--ease),box-shadow .12s var(--ease),filter .2s var(--ease);
+}
+.btn:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 9px 0 rgba(0,0,0,.15),0 18px 30px -8px rgba(255,46,99,.55)}
+.btn:active{transform:translateY(4px) scale(.99);box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.btn.ghost{background:var(--bg);color:var(--fg);box-shadow:inset 0 0 0 2px var(--line),0 4px 0 rgba(0,0,0,.05)}
+.btn.ghost:hover{box-shadow:inset 0 0 0 2px var(--fg),0 8px 16px -8px rgba(0,0,0,.25)}
+.btn.ghost:active{transform:translateY(2px)}
+.btn.sm{padding:12px 24px;font-size:15px}
+
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:28px}
+.fine{font-size:13px;color:var(--mut);margin-top:20px}
+
+.opt{
+  display:block;width:100%;text-align:left;padding:20px 24px;
+  border:2px solid var(--line);border-radius:var(--r-input);background:var(--bg);color:var(--fg);
+  cursor:pointer;margin-bottom:12px;font-weight:600;font-size:17px;
+  transition:transform .15s var(--ease-out),border-color .2s var(--ease),background .2s var(--ease),box-shadow .2s;
+  animation:fadeUp .4s var(--ease-out) both;
+}
+.opt:hover{border-color:var(--accent2);transform:translateY(-2px);box-shadow:0 8px 20px -12px rgba(255,46,99,.3)}
+.opt small{display:block;color:var(--mut);font-size:14px;font-weight:500;margin-top:4px}
+.opt[aria-pressed=true]{
+  background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;border-color:transparent;
+  box-shadow:0 8px 20px -8px rgba(255,46,99,.6);transform:scale(1.01);
+}
+.opt[aria-pressed=true] small{color:rgba(255,255,255,.85)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{
+  padding:12px 22px;border:2px solid var(--line);border-radius:var(--r-chip);
+  background:var(--bg);color:var(--fg);cursor:pointer;font-weight:700;font-size:15px;
+  transition:transform .15s var(--ease-out),border-color .2s,background .2s,color .2s,box-shadow .2s;
+}
+.chip:hover{border-color:var(--accent2);transform:translateY(-2px) scale(1.03)}
+.chip[aria-pressed=true]{
+  background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;border-color:transparent;
+  box-shadow:0 6px 16px -6px rgba(255,46,99,.55);animation:pop .3s var(--ease-out);
+}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+
+.stepper{display:flex;align-items:center;gap:28px;margin:28px 0}
+.stepper button{
+  width:64px;height:64px;border-radius:50%;border:0;
+  background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;
+  font-size:32px;font-weight:800;cursor:pointer;
+  box-shadow:0 6px 0 rgba(0,0,0,.15),0 10px 20px -8px rgba(255,46,99,.5);
+  transition:transform .12s var(--ease),box-shadow .12s var(--ease);
+}
+.stepper button:hover{transform:translateY(-2px) scale(1.05)}
+.stepper button:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.stepper output{font-size:64px;font-weight:900;letter-spacing:-.05em;min-width:64px;text-align:center;font-variant-numeric:tabular-nums;animation:numIn .3s var(--ease-out)}
 @keyframes numIn{from{opacity:0;transform:translateY(8px) scale(.9)}to{opacity:1;transform:none}}
-.big{font-size:56px;font-weight:700;letter-spacing:-.04em;margin:16px 0;font-variant-numeric:tabular-nums}
-input[type=range]{width:100%;accent-color:var(--fg);margin:8px 0 4px}
-.scale{display:flex;justify-content:space-between;font-size:13px;color:var(--mut)}
+
+.big{
+  font-size:64px;font-weight:900;letter-spacing:-.05em;margin:16px 0;
+  font-variant-numeric:tabular-nums;
+  background:linear-gradient(135deg,var(--accent1),var(--accent2));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+input[type=range]{
+  width:100%;height:12px;border-radius:999px;margin:16px 0 8px;
+  accent-color:var(--accent2);background:var(--soft);
+}
+.scale{display:flex;justify-content:space-between;font-size:13px;color:var(--mut);font-weight:600}
+
 .load{padding:80px 0;text-align:center}
-.skel{height:18px;background:linear-gradient(90deg,var(--soft) 25%,var(--line) 37%,var(--soft) 63%);background-size:400% 100%;animation:sk 1.2s infinite linear;border-radius:4px;margin:12px auto}
+.skel{height:24px;background:linear-gradient(90deg,var(--soft) 25%,var(--line) 37%,var(--soft) 63%);background-size:400% 100%;animation:sk 1.2s infinite linear;border-radius:999px;margin:16px auto}
 @keyframes sk{0%{background-position:100% 50%}100%{background-position:0 50%}}
-.sum{border:1px solid var(--fg);padding:20px;margin:20px 0;animation:cardIn .5s var(--ease-out) both}
-@keyframes cardIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
-.sum .n{font-size:40px;font-weight:700;letter-spacing:-.04em;line-height:1.1;font-variant-numeric:tabular-nums}
-.sum p{margin:6px 0 0;color:var(--mut);font-size:14px}
-.src{font-size:12px;color:var(--mut);margin-top:8px}
-.note{background:var(--soft);padding:12px 16px;font-size:14px;margin:12px 0;animation:fadeUp .35s var(--ease-out) both}
-.tabs{display:flex;border-bottom:1px solid var(--fg);margin:28px 0 8px;position:relative}
-.tab{flex:1;padding:14px;border:0;border-bottom:3px solid transparent;cursor:pointer;font-weight:600;color:var(--mut);background:var(--bg);transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease)}
-.tab[aria-selected=true]{color:var(--fg);border-bottom-color:var(--fg)}
-.day{border-top:1px solid var(--fg);padding:18px 0 6px;margin-top:20px;animation:fadeUp .5s var(--ease-out) both}
-.day:nth-child(1){animation-delay:.02s}.day:nth-child(2){animation-delay:.06s}.day:nth-child(3){animation-delay:.10s}.day:nth-child(4){animation-delay:.14s}
-.day:nth-child(5){animation-delay:.18s}.day:nth-child(6){animation-delay:.22s}.day:nth-child(7){animation-delay:.26s}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.dh{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
-.dh h3{margin:0;font-size:22px;letter-spacing:-.03em}
-.dh span{font-size:13px;color:var(--mut);text-align:right}
-.meal{border-top:1px solid var(--line);padding:12px 0}
-.ml{display:flex;justify-content:space-between;align-items:center;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
-.lnk{background:none;border:0;padding:4px 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;font-size:13px;color:var(--mut);text-transform:none;letter-spacing:0;transition:color var(--dur) var(--ease)}
-.lnk:hover{color:var(--fg)}
-.mn{display:block;width:100%;text-align:left;background:none;border:0;padding:4px 0;cursor:pointer;font-size:18px;font-weight:600;letter-spacing:-.02em}
-.mn small{display:block;font-size:13px;font-weight:400;color:var(--mut);letter-spacing:0;margin-top:2px}
-.mn .macros{display:inline-block;margin-top:4px;font-size:12px;color:var(--mut);font-weight:400;letter-spacing:0}
-.det{padding:10px 0 6px;font-size:15px;animation:expand .3s var(--ease-out)}
+
+.sum{
+  border-radius:var(--r-card);padding:32px;margin:24px 0;
+  background:linear-gradient(160deg, color-mix(in srgb, var(--accent1) 12%, var(--bg)), var(--bg));
+  box-shadow:var(--shadow-card);
+  animation:cardIn .5s var(--ease-out) both;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+.sum .n{font-size:clamp(40px,10vw,56px);font-weight:900;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums;margin-bottom:8px}
+.sum p{margin:0;color:var(--mut);font-size:15px;font-weight:500}
+.src{font-size:12px;color:var(--mut);margin-top:12px;opacity:.8}
+.note{
+  background:color-mix(in srgb, var(--accent3) 15%, var(--bg));
+  padding:16px 20px;border-radius:16px;font-size:14px;margin:16px 0;
+  border:2px dashed color-mix(in srgb, var(--accent3) 40%, transparent);
+  animation:fadeUp .35s var(--ease-out) both;
+}
+
+.tabs{
+  display:flex;gap:6px;padding:6px;margin:32px 0 16px;
+  background:var(--soft);border-radius:var(--r-btn);
+}
+.tab{
+  flex:1;padding:14px;border:0;border-radius:var(--r-btn);cursor:pointer;
+  font-weight:800;font-size:15px;color:var(--mut);background:transparent;
+  transition:background .25s var(--ease),color .25s var(--ease),box-shadow .25s;
+}
+.tab[aria-selected=true]{
+  color:#fff;background:linear-gradient(135deg,var(--accent1),var(--accent2));
+  box-shadow:0 6px 16px -8px rgba(255,46,99,.6);
+}
+
+.day{
+  border-radius:var(--r-card);padding:24px;margin-top:20px;
+  background:var(--bg);box-shadow:var(--shadow-card);
+  animation:fadeUp .5s var(--ease-out) both;
+}
+.day:nth-child(1){animation-delay:.02s}.day:nth-child(2){animation-delay:.06s}.day:nth-child(3){animation-delay:.10s}
+.day:nth-child(4){animation-delay:.14s}.day:nth-child(5){animation-delay:.18s}.day:nth-child(6){animation-delay:.22s}
+.day:nth-child(7){animation-delay:.26s}
+.dh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:12px}
+.dh h3{margin:0;font-size:24px;letter-spacing:-.03em;font-weight:900}
+.dh span{font-size:12px;color:var(--mut);text-align:right;font-weight:600;line-height:1.4}
+.meal{border-top:2px dashed var(--line);padding:16px 0}
+.meal:first-of-type{border-top:0}
+.ml{display:flex;justify-content:space-between;align-items:center;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);font-weight:800;margin-bottom:6px}
+.lnk{
+  background:transparent;border:0;padding:4px 10px;cursor:pointer;
+  text-decoration:none;font-size:12px;color:var(--accent2);text-transform:none;letter-spacing:0;
+  border-radius:999px;font-weight:800;
+  transition:background .2s,color .2s;
+}
+.lnk:hover{background:color-mix(in srgb, var(--accent2) 12%, transparent)}
+.mn{
+  display:block;width:100%;text-align:left;background:none;border:0;padding:6px 0;
+  cursor:pointer;font-size:20px;font-weight:800;letter-spacing:-.02em;color:var(--fg);
+}
+.mn small{display:block;font-size:13px;font-weight:600;color:var(--mut);letter-spacing:0;margin-top:4px}
+.mn .macros{display:inline-block;margin-top:6px;font-size:12px;color:var(--mut);font-weight:600;letter-spacing:0}
+.det{
+  padding:14px 18px;font-size:15px;border-radius:16px;margin-top:10px;
+  background:var(--soft);animation:expand .3s var(--ease-out);
+}
 @keyframes expand{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-.det ul{margin:0 0 10px;padding-left:18px}
-.det li{margin:2px 0}
-.det p{margin:0;color:var(--fg);opacity:.85}
-.det .serv{font-size:12px;color:var(--mut);margin:6px 0 8px}
-.grp{margin-top:24px;animation:fadeUp .4s var(--ease-out) both}
-.grp h3{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin:0 0 4px;font-weight:600}
-.it{display:flex;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer;transition:background .2s var(--ease);position:relative}
+.det ul{margin:0 0 10px;padding-left:20px}
+.det li{margin:4px 0}
+.det p{margin:8px 0 0;color:var(--fg);opacity:.9}
+.det .serv{font-size:12px;color:var(--mut);margin:4px 0 6px;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+
+.grp{margin-top:28px;animation:fadeUp .4s var(--ease-out) both}
+.grp h3{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 8px;font-weight:900}
+.it{
+  display:flex;gap:14px;align-items:center;padding:14px 12px;
+  border-bottom:1px solid var(--line);cursor:pointer;position:relative;
+  border-radius:16px;transition:background .2s var(--ease);
+}
 .it:hover{background:var(--soft)}
 .it input{position:absolute;opacity:0;pointer-events:none}
-.it .box{width:22px;height:22px;border:1.5px solid var(--fg);flex:none;display:grid;place-items:center;transition:background .2s var(--ease),border-color .2s var(--ease);position:relative}
-.it .box svg{width:14px;height:14px;fill:none;stroke:var(--bg);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .35s var(--ease-out)}
-.it.done .box{background:var(--fg);border-color:var(--fg)}
+.it .box{
+  width:26px;height:26px;border:2px solid var(--fg);border-radius:50%;flex:none;
+  display:grid;place-items:center;position:relative;
+  transition:background .2s var(--ease),border-color .2s var(--ease);
+}
+.it .box svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:26;stroke-dashoffset:26;transition:stroke-dashoffset .35s var(--ease-out)}
+.it.done .box{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
 .it.done .box svg{stroke-dashoffset:0}
-.it span:not(.box){flex:1;transition:color .25s var(--ease),opacity .25s var(--ease)}
-.it b{font-weight:500;white-space:nowrap;transition:color .25s var(--ease)}
-.it b small{display:block;font-weight:400;color:var(--mut);font-size:11px;letter-spacing:0;text-align:right}
-.it.done span:not(.box){color:var(--mut);text-decoration:line-through;text-decoration-thickness:1px}
+.it span:not(.box){flex:1;transition:color .25s var(--ease),opacity .25s var(--ease);font-weight:600}
+.it b{font-weight:800;white-space:nowrap;transition:color .25s var(--ease);color:var(--accent2)}
+.it b small{display:block;font-weight:600;color:var(--mut);font-size:11px;letter-spacing:0;text-align:right;margin-top:2px}
+.it.done span:not(.box){color:var(--mut);text-decoration:line-through;text-decoration-thickness:1.5px}
 .it.done b{color:var(--mut)}
-.foot{margin-top:56px;font-size:13px;color:var(--mut);border-top:1px solid var(--line);padding-top:16px}
-.offline{position:fixed;left:0;right:0;bottom:0;background:var(--fg);color:var(--bg);font-size:13px;text-align:center;padding:10px;transform:translateY(100%);transition:transform .35s var(--ease-out);z-index:50}
+
+.foot{margin-top:56px;font-size:13px;color:var(--mut);border-top:1px solid var(--line);padding-top:20px;line-height:1.6}
+.offline{
+  position:fixed;left:16px;right:16px;bottom:16px;border-radius:999px;
+  background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;font-size:14px;font-weight:800;
+  text-align:center;padding:14px;transform:translateY(150%);transition:transform .35s var(--ease-out);z-index:50;
+  box-shadow:var(--shadow-btn);
+}
 .offline[aria-hidden=false]{transform:none}
 .install{display:none}
 .install[data-show=true]{display:inline-block;animation:pop .3s var(--ease-out)}
+
 @media (min-width:720px){
  .cols{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
  .cols .grp{margin-top:12px}
@@ -147,7 +259,11 @@ input[type=range]{width:100%;accent-color:var(--fg);margin:8px 0 4px}
 @media (prefers-reduced-motion:reduce){
  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
-@media print{.top,.bar,.tabs,.row,.lnk,.foot,.note,.offline,.install,.theme-btn{display:none!important}.wrap{padding:0}.it{break-inside:avoid}}
+@media print{
+ .top,.bar,.tabs,.row,.lnk,.foot,.note,.offline,.install,.theme-btn{display:none!important}
+ .wrap{padding:0}.it{break-inside:avoid}
+ .day,.sum{box-shadow:none;border:1px solid #ccc}
+}
 </style>
 </head>
 <body>
@@ -160,7 +276,7 @@ input[type=range]{width:100%;accent-color:var(--fg);margin:8px 0 4px}
 function applyTheme(t){
   document.documentElement.setAttribute('data-theme',t);
   const m=document.querySelector('meta[name="theme-color"]');
-  if(m) m.setAttribute('content', t==='dark'?'#0a0a0a':'#000000');
+  if(m) m.setAttribute('content', t==='dark'?'#0b0b0f':'#000000');
 }
 function initTheme(){
   const saved=localStorage.getItem('keenwiix-theme');
@@ -175,7 +291,7 @@ function toggleTheme(){
 }
 initTheme();
 
-/* ================= PRICES fallback ================= */
+/* ================= PRICES ================= */
 const ING_FALLBACK = {
   oats:{n:'Овсяные хлопья',u:'g',packSize:900,p:95,c:'Крупы и бакалея'},
   rice:{n:'Рис',u:'g',packSize:900,p:115,c:'Крупы и бакалея'},
@@ -229,8 +345,8 @@ const ING_FALLBACK = {
   greens:{n:'Зелень (петрушка/укроп)',u:'g',packSize:100,p:60,c:'Овощи и фрукты'}
 };
 let ING = JSON.parse(JSON.stringify(ING_FALLBACK));
-let PRICE_META = {source:'Пятёрочка', updatedAt:'2026-11-05'};
-const STORE_MULT = {disc:.9, super:1, prem:1.25};
+let PRICE_META = {source:'Супермаркет', updatedAt:'2026-11-05'};
+const STORE_MULT = {disc:0.85, super:1, prem:1.45};
 
 async function loadPrices(){
   try{
@@ -244,14 +360,14 @@ async function loadPrices(){
       next[k] = {n:it.n, u:it.u, packSize:it.pack, p:it.price, c:it.c};
     }
     ING = next;
-    PRICE_META = {source:j.source||'Пятёрочка', updatedAt:j.updatedAt||''};
+    PRICE_META = {source:j.source||'Супермаркет', updatedAt:j.updatedAt||''};
   }catch(e){}
 }
 
 /* ================= RECIPES ================= */
 const R=(id,n,m,t,k,p,f,c,serv,i,s)=>({id,n,m,t,k,p,f,c,serv,i,s});
 const RECIPES=[
- /* ЗАВТРАКИ b1–b30 */
+ /* ЗАВТРАКИ */
  R('b1','Овсянка на молоке с бананом','b',10,340,12,7,54,1,{oats:60,milk:200,banana:100},'Вскипятите молоко, всыпьте хлопья и варите 5–7 минут, помешивая. Сверху — нарезанный банан.'),
  R('b2','Омлет с помидором','b',10,260,19,17,6,1,{egg:2,milk:50,tomato:80,oil:5},'Взбейте яйца с молоком и щепоткой соли. Обжарьте помидор на масле 2 минуты, залейте смесью и готовьте под крышкой 5 минут.'),
  R('b3','Творог с яблоком и орехами','b',5,300,22,12,28,1,{cottage:150,apple:100,nuts:15},'Яблоко нарежьте кубиками, орехи грубо порубите и смешайте с творогом.'),
@@ -282,8 +398,13 @@ const RECIPES=[
  R('b28','Овсянка с яблоком и корицей','b',10,300,9,5,54,1,{oats:60,milk:200,apple:100},'Варите хлопья в молоке, добавьте тёртое яблоко, можно щепотку корицы.'),
  R('b29','Греческий йогурт с бананом и орехами','b',5,340,20,12,36,1,{greek:200,banana:100,nuts:15},'Смешайте йогурт с нарезанным бананом и рублеными орехами.'),
  R('b30','Блинчики из овсянки с творогом','b',20,360,20,10,48,2,{oats:80,egg:2,milk:100,cottage:150,oil:5},'Смешайте овсянку, яйца, молоко. Жарьте тонкие блинчики. Подавайте с творогом.'),
+ R('b31','Шакшука с перцем','b',20,340,18,20,18,1,{egg:2,tomatoes_c:200,pepper:100,onion:50,oil:10,garlic:5},'Обжарь лук, перец, чеснок, добавь томаты, туши 10 мин. Сделай лунки и вбей яйца, готовь 5 мин под крышкой.'),
+ R('b32','Тост с авокадо и яйцом пашот','b',15,380,16,22,28,1,{bread:80,egg:2,greens:20,oil:5},'Подсуши хлеб, разомни авокадо (или зелень+масло), сверху яйца пашот.'),
+ R('b33','Панкейки овсяные с йогуртом','b',20,360,18,10,50,2,{oats:100,egg:2,milk:150,yogurt:100,oil:5},'Взбей овсянку, яйца, молоко. Жарь панкейки, подавай с йогуртом.'),
+ R('b34','Рисовая каша с тыквой','b',25,330,8,6,58,1,{rice:70,milk:200,carrot:100,honey:10},'Вари рис в молоке с тёртой тыквой/морковью 20 мин, добавь мёд.'),
+ R('b35','Омлет с грибами и сыром','b',15,340,20,24,6,1,{egg:3,milk:40,cheese:30,onion:40,oil:8},'Обжарь лук и грибы, залей яйцами, посыпь сыром, под крышку на 5 мин.'),
 
- /* ОБЕДЫ l1–l35 */
+ /* ОБЕДЫ */
  R('l1','Куриный суп с лапшой','l',40,380,28,10,40,2,{chicken:200,potato:300,carrot:100,onion:60,pasta:60},'Варите курицу в 800 мл воды 15 минут. Добавьте картофель, морковь и лук, через 10 минут — макароны и варите ещё 7 минут.'),
  R('l2','Чечевичный суп','l',35,350,18,8,48,2,{lentils:140,carrot:100,onion:80,potato:200,oil:15},'Обжарьте лук и морковь на масле 5 минут. Добавьте чечевицу, картофель и 1 л воды, варите 25 минут.'),
  R('l3','Гречка с курицей и овощами','l',30,480,32,12,48,2,{buckwheat:140,chicken:260,onion:80,carrot:100,oil:15},'Обжарьте кубики курицы с луком и морковью 8 минут. Добавьте гречку и воду 1:2, тушите под крышкой 15 минут.'),
@@ -319,8 +440,15 @@ const RECIPES=[
  R('l33','Салат с фасолью и кукурузой','l',10,360,14,12,50,2,{beans:400,corn:170,cucumber:150,onion:40,oil:15},'Смешайте фасоль, кукурузу, огурец и лук. Заправьте маслом.'),
  R('l34','Булгур с овощами и тофу','l',25,400,18,12,54,2,{bulgur:140,tofu:200,zucchini:150,carrot:80,oil:15},'Обжарьте тофу, добавьте овощи, тушите 7 минут. Смешайте с отваренным булгуром.'),
  R('l35','Щи из свежей капусты','l',45,300,12,8,44,3,{cabbage:300,potato:250,carrot:100,onion:80,tomatoes_c:200,oil:15},'Обжарьте лук и морковь с томатами. В воду положите картофель, капусту, зажарку, варите 25 минут.'),
+ R('l36','Том-ям с курицей (лайт)','l',35,360,28,14,30,2,{chicken:250,pepper:100,tomatoes_c:200,onion:60,garlic:5,greens:15},'Обжарь курицу, добавь овощи и томаты, туши 20 мин, в конце зелень и чеснок.'),
+ R('l37','Плов с индейкой и барбарисом','l',50,520,34,14,64,3,{rice:200,chicken:300,carrot:150,onion:100,oil:20,garlic:10},'Классический плов: обжарь индейку с луком и морковью, добавь рис, воду 1:2, чеснок, туши 25 мин.'),
+ R('l38','Крем-суп из тыквы','l',30,280,6,12,36,3,{carrot:300,potato:200,onion:80,milk:200,oil:15},'Отвари овощи, пробей блендером, влей молоко, прогрей.'),
+ R('l39','Салат с креветками и авокадо','l',15,340,24,18,18,2,{tuna:150,cucumber:150,tomato:150,greens:20,oil:15},'Смешай креветки/тунец, овощи, зелень, заправь маслом.'),
+ R('l40','Чечевичный дал с рисом','l',35,420,20,10,58,2,{lentils:140,rice:120,onion:80,garlic:5,oil:15},'Обжарь лук и чеснок, добавь чечевицу, воду, специи. Вари 25 мин. Подавай с рисом.'),
+ R('l41','Пельмени домашние с бульоном','l',60,520,26,18,58,3,{mince:300,egg:1,onion:80,bread:60,potato:200,carrot:80},'Замеси тесто, слепи пельмени, свари в бульоне с овощами.'),
+ R('l42','Суп-лапша с индейкой','l',35,380,28,8,40,2,{chicken:250,carrot:100,onion:60,potato:200,greens:15},'Вари индейку 15 мин, добавь овощи, через 10 мин — лапшу/рис, зелень в конце.'),
 
- /* УЖИНЫ d1–d35 */
+ /* УЖИНЫ */
  R('d1','Курица, запечённая с картофелем','d',50,520,36,18,48,3,{chicken:450,potato:750,onion:120,oil:24},'Нарежьте картофель и лук, смешайте с курицей, маслом и солью. Запекайте при 200 °C около 40 минут.'),
  R('d2','Тушёная капуста с фаршем','d',40,400,26,18,28,3,{cabbage:750,mince:300,onion:120,carrot:120,oil:24},'Обжарьте фарш с луком и морковью 8 минут. Добавьте нашинкованную капусту и тушите под крышкой 25 минут.'),
  R('d3','Хек с рисом и брокколи','d',30,420,32,8,48,3,{hake:450,rice:180,broccoli:360,oil:15},'Рис варите 15 минут. Рыбу и брокколи запекайте при 200 °C 15 минут, сбрызнув маслом.'),
@@ -356,8 +484,17 @@ const RECIPES=[
  R('d33','Куриные котлеты с рисом','d',40,500,34,16,52,3,{chicken:450,egg:1,onion:100,rice:180,oil:20},'Измельчите курицу с луком, добавьте яйцо, сформируйте котлеты. Жарьте по 5 минут. Рис отварите.'),
  R('d34','Запечённая индейка с картофелем','d',50,500,36,16,48,3,{chicken:450,potato:700,onion:100,oil:20},'Выложите индейку и картофель на противень, сбрызните маслом. Запекайте 40 минут при 200 °C.'),
  R('d35','Овощное рагу с тофу','d',35,380,22,14,40,3,{tofu:390,zucchini:300,pepper:200,tomatoes_c:400,onion:100,oil:20},'Обжарьте тофу кубиками 5 минут, добавьте овощи и томаты, тушите 15 минут.'),
+ R('d36','Курица терияки с рисом','d',35,540,36,16,60,3,{chicken:450,rice:180,pepper:150,onion:100,oil:20},'Обжарь курицу с овощами, добавь соус терияки (соевый+мёд), туши 10 мин. Подавай с рисом.'),
+ R('d37','Рыба в сливочном соусе с картофелем','d',40,480,32,20,44,3,{hake:500,potato:600,milk:150,cheese:60,oil:15},'Запеки рыбу и картофель 25 мин, залей смесью молока+сыра, ещё 10 мин.'),
+ R('d38','Индейка с гречкой и грибами','d',40,500,36,14,50,3,{chicken:450,buckwheat:180,onion:80,oil:20},'Обжарь индейку с луком и грибами, отвари гречку, подай вместе.'),
+ R('d39','Овощное карри с нутом','d',35,400,16,12,54,3,{chickpeas:400,tomatoes_c:400,onion:100,pepper:150,oil:20},'Обжарь лук и перец, добавь томаты и нут, специи карри, туши 15 мин.'),
+ R('d40','Котлеты из индейки с пюре','d',45,540,36,20,48,3,{chicken:450,egg:1,onion:100,potato:600,milk:100,oil:20},'Сформируй котлеты, запеки 20 мин. Пюре — отвари картофель, разомни с молоком.'),
+ R('d41','Лосось с рисом и брокколи','d',30,560,34,24,50,3,{salmon:350,rice:180,broccoli:300,oil:15},'Запеки лосось 15 мин, отвари рис и брокколи, собери тарелку.'),
+ R('d42','Свинина в духовке с овощами','d',50,560,36,26,40,3,{pork:450,potato:600,carrot:150,onion:100,oil:20},'Выложи всё на противень, запекай 40 мин при 200 °C.'),
+ R('d43','Тушёная фасоль с курицей','d',40,460,34,14,48,3,{chicken:400,beans:400,tomatoes_c:400,onion:100,oil:20},'Обжарь курицу, добавь фасоль и томаты, туши 20 мин.'),
+ R('d44','Плов с грибами (вег)','d',45,440,14,12,68,3,{rice:200,chickpeas:200,carrot:150,onion:100,oil:20},'Обжарь лук, морковь, нут/грибы, добавь рис и воду 1:2, туши 20 мин.'),
 
- /* ПЕРЕКУСЫ s1–s20 */
+ /* ПЕРЕКУСЫ */
  R('s1','Яблоко и горсть орехов','s',2,200,5,12,22,1,{apple:150,nuts:20},'Ничего готовить не нужно.'),
  R('s2','Банан','s',1,105,1,0,27,1,{banana:120},'Ничего готовить не нужно.'),
  R('s3','Яйца вкрутую','s',12,150,12,10,0,1,{egg:2},'Варите яйца 9 минут, остудите в холодной воде.'),
@@ -378,8 +515,12 @@ const RECIPES=[
  R('s18','Яйцо и огурец','s',10,120,10,8,2,1,{egg:2,cucumber:100},'Сварите яйца, нарежьте огурец.'),
  R('s19','Банан с творогом','s',3,240,16,6,32,1,{banana:100,cottage:100},'Нарежьте банан, смешайте с творогом.'),
  R('s20','Орехи и яблоко','s',2,220,4,14,22,1,{nuts:25,apple:100},'Нарежьте яблоко, добавьте орехи.'),
+ R('s21','Хумус с огурцом','s',5,160,7,9,14,1,{chickpeas:100,cucumber:100,oil:8},'Разомни нут с маслом, подай с огурцом.'),
+ R('s22','Творог с ягодами','s',3,180,16,5,20,1,{cottage:150,apple:80,honey:10},'Смешай творог с нарезанным яблоком/ягодами и мёдом.'),
+ R('s23','Орехи и курага','s',1,220,5,14,18,1,{nuts:25,raisins:20},'Просто смешай.'),
+ R('s24','Протеиновый смузи','s',5,240,14,6,34,1,{kefir:250,banana:100,oats:20},'Взбей всё блендером.'),
 
- /* СЛАДКОЕ / НАПИТКИ t1–t15 */
+ /* СЛАДКОЕ / НАПИТКИ */
  R('t1','Какао на молоке','t',5,180,8,8,20,1,{milk:200,cocoa:8,honey:10},'Подогрейте молоко, добавьте какао и мёд, перемешайте.'),
  R('t2','Смузи банан-кефир','t',3,200,8,4,34,1,{banana:100,kefir:200},'Взбейте банан с кефиром блендером.'),
  R('t3','Смузи яблоко-йогурт','t',3,180,8,3,30,1,{apple:100,yogurt:150},'Взбейте яблоко с йогуртом.'),
@@ -395,8 +536,10 @@ const RECIPES=[
  R('t13','Творожная запеканка с изюмом','t',35,240,20,6,28,3,{cottage:400,egg:2,raisins:40,oats:40},'Смешайте ингредиенты, выложите в форму. Выпекайте 30 минут при 180 °C.'),
  R('t14','Овсянка с какао и мёдом','t',10,260,9,6,44,1,{oats:50,milk:200,cocoa:5,honey:10},'Варите хлопья в молоке, в конце добавьте какао и мёд.'),
  R('t15','Смузи с творогом и яблоком','t',3,220,16,5,28,1,{cottage:150,apple:100,kefir:100},'Взбейте всё блендером.'),
+ R('t16','Шоколадный смузи','t',3,260,10,8,38,1,{milk:200,banana:100,cocoa:8,honey:10},'Взбей молоко, банан, какао и мёд.'),
+ R('t17','Йогурт с ягодами и орехами','t',3,240,14,10,24,1,{greek:150,apple:80,nuts:15},'Смешай йогурт, нарезанное яблоко, орехи.'),
 
- /* ЗАГОТОВКИ / СОУСЫ g1–g15 */
+ /* ЗАГОТОВКИ / СОУСЫ */
  R('g1','Томатный соус с чесноком','g',15,120,3,6,14,4,{tomatoes_c:400,garlic:10,oil:20,greens:15},'Прогрейте томаты с чесноком на масле 10 минут. Посыпьте зеленью.'),
  R('g2','Соус из йогурта с зеленью','g',5,80,5,4,6,4,{yogurt:200,greens:20,garlic:3},'Смешайте йогурт, зелень и чеснок.'),
  R('g3','Заправка из масла и лимона','g',2,90,0,10,1,4,{oil:60,lemon:20,greens:10},'Смешайте масло, сок лимона и зелень.'),
@@ -411,13 +554,29 @@ const RECIPES=[
  R('g12','Творожный крем с зеленью','g',5,140,15,6,5,4,{cottage:300,greens:20,garlic:3},'Смешайте творог, зелень и чеснок.'),
  R('g13','Запечённые овощи на неделю','g',45,200,4,10,22,4,{potato:300,carrot:200,onion:100,oil:20},'Нарежьте овощи, запекайте 30 минут при 200 °C.'),
  R('g14','Фрикадельки из индейки на неделю','g',30,260,36,12,2,4,{chicken:500,egg:1,onion:80},'Измельчите индейку с луком, добавьте яйцо. Запекайте 20 минут при 200 °C.'),
- R('g15','Салат-заготовка из капусты','g',10,90,2,5,10,4,{cabbage:400,carrot:100,oil:20},'Нашинкуйте капусту, натрите морковь, заправьте маслом. Храните до 2 дней.')
+ R('g15','Салат-заготовка из капусты','g',10,90,2,5,10,4,{cabbage:400,carrot:100,oil:20},'Нашинкуйте капусту, натрите морковь, заправьте маслом. Храните до 2 дней.'),
+ R('g16','Заправка для салата на неделю','g',5,120,0,12,2,4,{oil:60,lemon:20,greens:15,garlic:5},'Смешай масло, лимон, зелень, чеснок. Храни в бутылке.'),
+ R('g17','Овощи на пару на неделю','g',15,90,3,2,16,4,{broccoli:300,carrot:150,zucchini:200},'Готовь на пару 10 мин, храни до 3 дней.')
 ];
 const RID=Object.fromEntries(RECIPES.map(r=>[r.id,r]));
-const MEAT=['chicken','mince','pork'],FISH=['hake','tuna','salmon'],DAIRY=['milk','yogurt','greek','kefir','sourcream','cottage','cheese'],EGG=['egg'];
+const MEAT=['chicken','mince','pork','turkey'],FISH=['hake','tuna','salmon'],DAIRY=['milk','yogurt','greek','kefir','sourcream','cottage','cheese'],EGG=['egg'];
 const SLOT={b:'Завтрак',l:'Обед',d:'Ужин',s:'Перекус',t:'Сладкое',g:'Заготовка'};
 const DAYS=['Понедельник','Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье'];
-const DISLIKES=[['onion','Лук'],['carrot','Морковь'],['cabbage','Капуста'],['broccoli','Брокколи'],['zucchini','Кабачки'],['pepper','Перец'],['tomato','Помидоры'],['cucumber','Огурцы'],['garlic','Чеснок'],['chickpeas','Нут'],['lentils','Чечевица'],['tofu','Тофу'],['nuts','Орехи'],['cheese','Сыр'],['cottage','Творог'],['banana','Бананы'],['hake','Рыба хек'],['tuna','Тунец'],['salmon','Лосось'],['mince','Фарш'],['buckwheat','Гречка'],['beans','Фасоль'],['corn','Кукуруза'],['raisins','Изюм']];
+const DISLIKES=[
+ ['chicken','Курица'],['turkey','Индейка'],['pork','Свинина'],['mince','Фарш'],
+ ['hake','Рыба (хек)'],['salmon','Лосось'],['tuna','Тунец'],
+ ['milk','Молоко'],['yogurt','Йогурт'],['greek','Греческий йогурт'],
+ ['kefir','Кефир'],['cottage','Творог'],['cheese','Сыр'],['sourcream','Сметана'],['egg','Яйца'],
+ ['oats','Овсянка'],['buckwheat','Гречка'],['rice','Рис'],['pasta','Макароны'],
+ ['bulgur','Булгур'],['couscous','Кускус'],['quinoa','Киноа'],
+ ['lentils','Чечевица'],['chickpeas','Нут'],['beans','Фасоль'],
+ ['onion','Лук'],['garlic','Чеснок'],['carrot','Морковь'],['cabbage','Капуста'],
+ ['broccoli','Брокколи'],['zucchini','Кабачки'],['pepper','Перец'],
+ ['tomato','Помидоры'],['cucumber','Огурцы'],['potato','Картофель'],
+ ['banana','Бананы'],['apple','Яблоки'],['nuts','Орехи'],['raisins','Изюм'],
+ ['tofu','Тофу'],['corn','Кукуруза'],['honey','Мёд'],['cocoa','Какао'],
+ ['bread','Хлеб'],['oil','Масло растительное'],['seeds','Семечки']
+];
 const DMAP={tomato:['tomato','tomatoes_c']};
 const QUESTIONS=[
  {id:'goal',t:'Какая у вас цель?',opts:[['lose','Снизить вес','порции немного меньше'],['keep','Держать форму','стандартные порции'],['gain','Набрать массу','порции больше']]},
@@ -427,7 +586,11 @@ const QUESTIONS=[
  {id:'snack',t:'Сколько приёмов пищи?',opts:[['3','3 раза в день'],['4','3 раза и перекус']]},
  {id:'time',t:'Сколько времени на готовку?',sub:'На одно блюдо.',opts:[['20','До 20 минут'],['40','До 40 минут'],['0','Не важно']]},
  {id:'batch',t:'Готовить сразу на два дня?',sub:'Обед и ужин повторяются через день — меньше возни.',opts:[['no','Нет, каждый день новое'],['yes','Да, на два дня']]},
- {id:'store',t:'Где покупаете продукты?',opts:[['disc','Дискаунтер','цены ниже'],['super','Пятёрочка','средние цены'],['prem','Рынок или премиум','цены выше']]},
+ {id:'store',t:'Где покупаете продукты?',opts:[
+   ['disc','Дискаунтер','Светофор, Fix Price, Магнит-эконом — дёшево и сердито'],
+   ['super','Супермаркет','Пятёрочка, Перекрёсток, Лента — золотая середина'],
+   ['prem','Гурме-бутик','Азбука Вкуса, Перекрёсток Премиум, рынок — качество и цена']
+ ]},
  {id:'budget',t:'Бюджет на неделю',sub:'На всех, только продукты.',type:'range',min:1000,max:30000,step:500}
 ];
 
@@ -445,7 +608,11 @@ function dietOk(r,a){
 }
 function disSet(a){const s=[];(a.dislikes||[]).forEach(k=>(DMAP[k]||[k]).forEach(x=>s.push(x)));return s}
 function pool(m,a){
- const base=RECIPES.filter(r=>r.m===m&&dietOk(r,a));
+ let base=RECIPES.filter(r=>r.m===m&&dietOk(r,a));
+ if(a.store==='disc'){
+   const expensive=['salmon','quinoa','tofu','greek','turkey'];
+   base=base.filter(r=>!Object.keys(r.i).some(k=>expensive.includes(k)));
+ }
  const dis=disSet(a),lim=+a.time||0;
  const levels=[r=>!has(r,dis)&&(!lim||r.t<=lim),r=>!has(r,dis),()=>true];
  for(let i=0;i<3;i++){
@@ -488,7 +655,7 @@ function sequence(m,a,rng,bias){
 function shopping(plan,f){
  const tot={};
  plan.forEach(day=>day.forEach(e=>{
-  const r=RID[e.id]; if(!r) return;
+const r=RID[e.id]; if(!r) return;
   for(const k in r.i) tot[k]=(tot[k]||0)+r.i[k]*f;
  }));
  return Object.keys(tot).map(k=>{
@@ -503,7 +670,8 @@ function shopping(plan,f){
 }
 function totals(a,plan){
  const items=shopping(plan,factor(a));
- const total=Math.round(items.reduce((s,i)=>s+i.cost,0)*storeMult(a)/10)*10;
+ const mult=storeMult(a);
+ const total=Math.round(items.reduce((s,i)=>s+i.cost,0)*mult/10)*10;
  return{items,total};
 }
 function generate(a){
@@ -561,13 +729,6 @@ window.addEventListener('beforeinstallprompt',e=>{
  const b=document.querySelector('[data-a="install"]');
  if(b)b.dataset.show='true';
 });
-
-document.addEventListener('pointermove',e=>{
- const b=e.target.closest('.btn'); if(!b) return;
- const r=b.getBoundingClientRect();
- b.style.setProperty('--mx',(e.clientX-r.left)+'px');
- b.style.setProperty('--my',(e.clientY-r.top)+'px');
-},{passive:true});
 
 function head(){
  const pct=S.screen==='quiz'?Math.round((S.i+1)/QUESTIONS.length*100):0;
@@ -639,7 +800,7 @@ function result(){
  ${S.relaxed?'<div class="note">Из-за ограничений в некоторых слотах вариантов мало — часть блюд могла не попасть под фильтры по времени или нелюбимым продуктам.</div>':''}
  ${tabs}${body}
  <div class="row"><button class="btn ghost sm" data-a="regen">Собрать заново</button><button class="btn ghost sm" data-a="restart">Пройти тест заново</button></div>
- <div class="foot">Цены ориентировочные и усреднённые по Пятёрочке, реальная стоимость зависит от региона и даты. Калорийность и КБЖУ приблизительные. Это не медицинская рекомендация — при заболеваниях и особых диетах посоветуйтесь с врачом.</div>`;
+ <div class="foot">Цены ориентировочные и усреднённые, реальная стоимость зависит от региона и даты. Калорийность и КБЖУ приблизительные. Это не медицинская рекомендация — при заболеваниях и особых диетах посоветуйтесь с врачом.</div>`;
 }
 function countUp(){
  const el=document.getElementById('sumN'); if(!el) return;
